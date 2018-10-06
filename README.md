@@ -10,10 +10,15 @@ The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
 		pip install django-ltree
 
-
 Then add `django_ltree` to `INSTALLED_APPS` in your Django project settings.
 
-Requires
+And make sure to run `django_ltree` migrations before you added the `PathField`
+
+    python manage.py migrations django_ltree
+
+This will install the `ltree` extension
+
+Requires:
 
 - Django 2.0 or superior
 - Python 3.6 or superior
