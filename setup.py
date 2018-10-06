@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django_ltree',
-    version='0.1a',
+    version='0.2a',
     python_requires='>=3.6',
     url='https://github.com/mariocesar/django-ltree',
     author='Mario César Señoranis Ayala',
