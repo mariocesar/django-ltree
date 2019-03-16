@@ -1,9 +1,11 @@
+import importlib
+
 from django.apps import AppConfig
 
 
 class DjangoLtreeConfig(AppConfig):
-    name = 'django_ltree'
+    name = "django_ltree"
 
     def ready(self):
-        from django_ltree import checks
-
+        importlib.import_module("django_ltree.checks")
+        importlib.import_module("django_ltree.lookups")
