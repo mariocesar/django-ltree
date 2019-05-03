@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django_ltree',
-    version='0.2a',
+    version='0.3',
     python_requires='>=3.6',
     url='https://github.com/mariocesar/django-ltree',
     author='Mario César Señoranis Ayala',
@@ -10,7 +10,7 @@ setup(
     license='MIT',
     packages=find_packages(),
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Framework :: Django',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
