@@ -5,6 +5,7 @@ An ltree extension implementation to support hierarchical tree-like data in djan
 Postgresql has already a optimized and very useful tree implementation for data.
 The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
+[![PyPI version](https://badge.fury.io/py/django-ltree.svg)](https://badge.fury.io/py/django-ltree)
 
 ## Install
 
