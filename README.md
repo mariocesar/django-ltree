@@ -7,12 +7,11 @@ The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
 ## Links
 
-- Pypi https://pypi.org/project/django-ltree/
-- Source code https://github.com/mariocesar/django-ltree
-- Bugs https://github.com/mariocesar/django-ltree/issues
-- Contribute https://github.com/mariocesar/django-ltree/pulls
-
-- Documentation `TODO`
+ - Pypi https://pypi.org/project/django-ltree/
+ - Source code https://github.com/mariocesar/django-ltree
+ - Bugs https://github.com/mariocesar/django-ltree/issues
+ - Contribute https://github.com/mariocesar/django-ltree/pulls
+ - Documentation `TODO`
 
 [![PyPI version](https://badge.fury.io/py/django-ltree.svg)](https://badge.fury.io/py/django-ltree)
 
