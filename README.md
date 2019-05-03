@@ -8,7 +8,7 @@ The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
 ## Install
 
-		pip install django-ltree
+    pip install django-ltree
 
 Then add `django_ltree` to `INSTALLED_APPS` in your Django project settings.
 
