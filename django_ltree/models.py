@@ -40,7 +40,7 @@ class TreeModel(models.Model):
         if len(self.path) > 1:
             return self.ancestors().exclude(id=self.id).last()
 
-    def childrens(self):
+    def children(self):
         return self.descendants().filter(path__depth=len(self.path) + 1)
 
     def siblings(self):
