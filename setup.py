@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="django_ltree",
-    version="0.3",
+    version="0.4",
     python_requires=">=3.6",
     url="https://github.com/mariocesar/django-ltree",
     author="Mario César Señoranis Ayala",
