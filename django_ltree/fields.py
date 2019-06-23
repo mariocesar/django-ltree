@@ -98,4 +98,4 @@ class PathField(TextField):
         elif isinstance(value, (list, str)):
             return str(PathValue(value))
 
-        raise ValueError(f"Unknwon value type {type(value)}")
+        raise ValueError(f"Unknown value type {type(value)}")
