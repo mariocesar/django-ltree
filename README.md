@@ -23,7 +23,7 @@ Then add `django_ltree` to `INSTALLED_APPS` in your Django project settings.
 
 And make sure to run `django_ltree` migrations before you added the `PathField`
 
-    python manage.py migrations django_ltree
+    python manage.py migrate django_ltree
 
 This will install the `ltree` extension
 
