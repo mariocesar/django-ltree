@@ -17,6 +17,9 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=find_packages(),
+    install_requires=[
+        "django>=2.0",
+    ],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Django",
