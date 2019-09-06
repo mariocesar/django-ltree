@@ -6,6 +6,8 @@ using the native Postgres extension `ltree`.
 Postgresql has already a optimized and very useful tree implementation for data.
 The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
+This fork is a backport to Django 1.11 and Python 2.7.
+
 ## Links
 
  - Pypi https://pypi.org/project/django-ltree/
@@ -44,6 +46,6 @@ class Migration(migrations.Migration):
 
 ## Requires
 
-- Django 2.0 or superior
-- Python 3.6 or superior
+- Django 2.0 or superior - FIXME
+- Python 3.6 or superior - FIXME
 

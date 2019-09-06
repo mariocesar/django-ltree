@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from setuptools import setup, find_packages
 
 
@@ -8,7 +9,7 @@ with open("README.md", "r") as fh:
 setup(
     name="django_ltree",
     version="0.4",
-    python_requires=">=3.6",
+    python_requires=">=2.7",
     url="https://github.com/mariocesar/django-ltree",
     author="Mario César Señoranis Ayala",
     author_email="mariocesar@humanzilla.com",
@@ -18,7 +19,7 @@ setup(
     license="MIT",
     packages=find_packages(exclude=("example",)),
     install_requires=[
-        "django>=2.0",
+        "django>=1.11",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
