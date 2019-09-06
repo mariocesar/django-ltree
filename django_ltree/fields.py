@@ -1,21 +1,19 @@
-from typing import List, Union
-
 from django import forms
 from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
 
 
-class PathValue(List):
-    def __init__(self, val: Union[list, str]):
+class PathValue(list):
+    def __init__(self, val):  # type: (Union[list, str]) -> None
         if isinstance(val, str):
             val = val.split(".")
         elif isinstance(val, list):
             val = val
         else:
-            raise ValueError(f"Invalid value for path: {val!r}")
+            raise ValueError("Invalid value for path: {}".format(val))
 
-        super().__init__(val)
+        super(PathValue, self).__init__(val)
 
     def __repr__(self):
         return str(self)
@@ -25,7 +23,7 @@ class PathValue(List):
 
 
 class PathValueProxy:
-    def __init__(self, field_name: str):
+    def __init__(self, field_name):  # type: (str) -> None
         self.field_name = field_name
 
     def __get__(self, instance, owner):
@@ -66,13 +64,13 @@ class PathField(TextField):
     def formfield(self, **kwargs):
         kwargs["form_class"] = PathFormField
         kwargs["widget"] = TextInput(attrs={"class": "vTextField"})
-        return super().formfield(**kwargs)
+        return super(PathField, self).formfield(**kwargs)
 
     def contribute_to_class(self, cls, name, private_only=False):
-        super().contribute_to_class(cls, name)
+        super(PathField, self).contribute_to_class(cls, name)
         setattr(cls, self.name, PathValueProxy(self.name))
 
-    def from_db_value(self, value, expression, connection):
+    def from_db_value(self, value, expression, connection, context):
         if value is None:
             return value
         return PathValue(value)
@@ -95,7 +93,7 @@ class PathField(TextField):
             return value
         elif isinstance(value, PathValue):
             return str(value)
-        elif isinstance(value, (list, str)):
+        elif isinstance(value, (list, basestring)):
             return str(PathValue(value))
 
-        raise ValueError(f"Unknown value type {type(value)}")
+        raise ValueError("Unknown value type {}".format(type(value)))
