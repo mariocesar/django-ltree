@@ -1,8 +1,11 @@
 from django.db import models
 from django.db.models.manager import BaseManager
 
+from django_ltree.paths import PathGenerator
+
 
 class TreeQuerySet(models.QuerySet):
+
     def roots(self):
         return self.filter(path__depth=1)
 
@@ -11,5 +14,13 @@ class TreeQuerySet(models.QuerySet):
 
 
 class TreeManager(BaseManager.from_queryset(TreeQuerySet)):
+
     def get_queryset(self):
         return super(TreeManager, self).get_queryset().order_by("path")
+
+    def create_child(self, parent=None, **kwargs):
+        paths_in_use = parent.children().values_list('path', flat=True) if parent else None
+        prefix = parent.path if parent else None
+        path_generator = PathGenerator(prefix, skip=paths_in_use)
+        kwargs['path'] = path_generator.next()
+        return self.create(**kwargs)
