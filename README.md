@@ -46,6 +46,6 @@ class Migration(migrations.Migration):
 
 ## Requires
 
-- Django 2.0 or superior - FIXME
-- Python 3.6 or superior - FIXME
+- Django 1.11 or superior
+- Python 2
 
