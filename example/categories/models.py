@@ -2,6 +2,7 @@ from django.db import models
 
 from django_ltree.fields import PathField
 from django_ltree.functions import NLevel
+from django_ltree.models import TreeModel
 
 
 class Category(models.Model):
@@ -18,3 +19,10 @@ class Category(models.Model):
         return Category.objects.filter(
             path__descendant=self.path, path__nlevel=NLevel(self.path) + 1
         )
+
+
+class Taxonomy(TreeModel):
+    name = models.TextField()
+
+    def __str__(self):
+        return '{}: {}'.format(self.path, self.name)

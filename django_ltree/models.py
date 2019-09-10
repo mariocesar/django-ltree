@@ -5,7 +5,7 @@ from .fields import PathField, PathValue
 
 
 class TreeModel(models.Model):
-    path = PathField()
+    path = PathField(unique=True)
     objects = TreeManager()
 
     class Meta:
@@ -47,4 +47,5 @@ class TreeModel(models.Model):
             type(self)
             ._default_manager.filter(path__descendants=".".join(parent))
             .filter(path__depth=len(self.path))
+            .exclude(path=self.path)
         )
