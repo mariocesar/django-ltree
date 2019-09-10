@@ -120,6 +120,18 @@ class TaxonomyTestCase(TestCase):
             self.assertTrue(str(item.path).endswith(label))
 
     def test_ancestors(self):
-        print Taxonomy.objects.roots().values('path')
         ancestors = Taxonomy.objects.get(name='Canis lupus').ancestors().values_list('name', flat=True)
         self.assertListEqual(list(ancestors), ['Animalia', 'Chordata', 'Mammalia', 'Carnivora', 'Canidae', 'Canis'])
+
+    def test_descendants(self):
+        descendants = Taxonomy.objects.get(name='Canidae').descendants().values_list('name', flat=True)
+        self.assertItemsEqual(descendants,
+                              ['Canis', 'Canis lupus', 'Canis rufus', 'Urocyon', 'Urocyon cinereoargenteus'])
+
+    def test_parent(self):
+        parent = Taxonomy.objects.get(name='Feliformia').parent()
+        self.assertEqual(parent.name, 'Carnivora')
+
+    def test_siblings(self):
+        siblings = Taxonomy.objects.get(name='Carnivora').siblings().values_list('name', flat=True)
+        self.assertItemsEqual(siblings, ['Pilosa'])
