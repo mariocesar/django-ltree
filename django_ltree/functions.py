@@ -10,4 +10,7 @@ __all__ = ("NLevel",)
 class NLevel(Transform):
     lookup_name = "depth"
     function = "nlevel"
-    output_field = fields.IntegerField()
+
+    @property
+    def output_field(self):
+        return fields.IntegerField()
