@@ -21,6 +21,8 @@ class TreeManager(BaseManager.from_queryset(TreeQuerySet)):
     def create_child(self, parent=None, **kwargs):
         paths_in_use = parent.children() if parent else self.roots()
         prefix = parent.path if parent else None
-        path_generator = PathGenerator(prefix, skip=paths_in_use.values_list('path', flat=True))
+        path_generator = PathGenerator(prefix,
+                                       skip=paths_in_use.values_list('path', flat=True),
+                                       label_size=getattr(self.model, 'label_size'))
         kwargs['path'] = path_generator.next()
         return self.create(**kwargs)

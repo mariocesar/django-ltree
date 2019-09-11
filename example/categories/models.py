@@ -22,6 +22,8 @@ class Category(models.Model):
 
 
 class Taxonomy(TreeModel):
+    label_size = 2
+
     name = models.TextField()
 
     def __str__(self):
