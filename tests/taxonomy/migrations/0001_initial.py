@@ -15,17 +15,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Category',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=140)),
-                ('path', django_ltree.fields.PathField(unique=True)),
-            ],
-            options={
-                'verbose_name_plural': 'categories',
-            },
-        ),
-        migrations.CreateModel(
             name='Taxonomy',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

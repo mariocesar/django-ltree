@@ -7,8 +7,8 @@ with open("README.md", "r") as fh:
 
 
 setup(
-    name="django_ltree",
-    version="0.4.1",
+    name="django_ltree_fork",
+    version="0.4.2",
     python_requires=">=2.7",
     url="https://github.com/boryszef/django-ltree",
     author="Borys Szefczyk (original code: Mario César Señoranis Ayala)",
@@ -27,10 +27,6 @@ setup(
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3 :: Only",
     ],
     project_urls={
         "Source": "https://github.com/boryszef/django_ltree",
