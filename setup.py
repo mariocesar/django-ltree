@@ -8,10 +8,10 @@ with open("README.md", "r") as fh:
 
 setup(
     name="django_ltree_fork",
-    version="0.4.2",
+    version="0.4.3",
     python_requires=">=2.7",
     url="https://github.com/boryszef/django-ltree",
-    author="Borys Szefczyk (original code: Mario César Señoranis Ayala)",
+    author="Borys Szefczyk",
     author_email="boryszef@gmail.com",
     description="django implemention of the ltree postgres extension - this is a backport to Python 2.7/Django 1.11",
     long_description=long_description,
