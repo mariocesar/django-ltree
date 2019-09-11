@@ -17,11 +17,11 @@ class PathGenerator(object):
         return self
 
     def __next__(self):
-        label = ''.join(self.product_iterator.next())
-        path = PathValue(self.path_prefix + [label])
-        while path in self.skip_paths:
-            label = ''.join(self.product_iterator.next())
+        for val in self.product_iterator:
+            label = ''.join(val)
             path = PathValue(self.path_prefix + [label])
-        return path
+            print(path, self.skip_paths)
+            if path not in self.skip_paths:
+                return path
 
     next = __next__

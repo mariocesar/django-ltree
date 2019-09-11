@@ -6,14 +6,14 @@ using the native Postgres extension `ltree`.
 Postgresql has already a optimized and very useful tree implementation for data.
 The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
-This fork is a backport to Django 1.11 and Python 2.7.
+This fork contains a backport to Django 1.11 and Python 2.7.
 
 ## Links
 
  - Pypi https://pypi.org/project/django-ltree/
- - Source code https://github.com/mariocesar/django-ltree
- - Bugs https://github.com/mariocesar/django-ltree/issues
- - Contribute https://github.com/mariocesar/django-ltree/pulls
+ - Source code https://github.com/boryszef/django-ltree
+ - Bugs https://github.com/boryszef/django-ltree/issues
+ - Contribute https://github.com/boryszef/django-ltree/pulls
  - Documentation `TODO`
 
 [![PyPI version](https://badge.fury.io/py/django-ltree.svg)](https://badge.fury.io/py/django-ltree)
@@ -49,3 +49,6 @@ class Migration(migrations.Migration):
 - Django 1.11 or superior
 - Python 2
 
+## Testing
+
+Make sure you have Postgres installed. Then simply run `tox` in the root directory of the project.

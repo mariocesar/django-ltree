@@ -1,5 +1,3 @@
-import pytest
-
 try:
     import django
     from django.conf import settings
@@ -7,8 +5,7 @@ except ImportError:
     raise ImportError("To fix this error, run: pip install -r requirements.txt")
 
 
-#@pytest.fixture(scope='session', autouse=True)
-def pytest_configure(config):
+def pytest_sessionstart(session):
     settings.configure(
         DEBUG=True,
         USE_TZ=True,
@@ -33,4 +30,3 @@ def pytest_configure(config):
         SITE_ID=1,
     )
     django.setup()
-    print "CONFIGURED"
