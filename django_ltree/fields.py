@@ -2,6 +2,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
+from six import string_types
 
 
 class PathValue(list):
@@ -93,7 +94,7 @@ class PathField(TextField):
             return value
         elif isinstance(value, PathValue):
             return str(value)
-        elif isinstance(value, (list, basestring)):
+        elif isinstance(value, (list, string_types)):
             return str(PathValue(value))
 
         raise ValueError("Unknown value type {}".format(type(value)))

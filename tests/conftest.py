@@ -7,7 +7,7 @@ except ImportError:
 
 def pytest_sessionstart(session):
     settings.configure(
-        DEBUG=True,
+        DEBUG=False,
         USE_TZ=True,
         DATABASES={
             'default': {
@@ -28,5 +28,8 @@ def pytest_sessionstart(session):
             'taxonomy',
         ],
         SITE_ID=1,
+        SILENCED_SYSTEM_CHECKS=[
+            'RemovedInDjango30Warning'
+        ]
     )
     django.setup()

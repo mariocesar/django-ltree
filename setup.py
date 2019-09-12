@@ -20,6 +20,7 @@ setup(
     packages=find_packages(exclude=("example",)),
     install_requires=[
         "django>=1.11",
+        "six"
     ],
     classifiers=[
         "Development Status :: 4 - Beta",

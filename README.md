@@ -16,8 +16,6 @@ This fork contains a backport to Django 1.11 and Python 2.7.
  - Contribute https://github.com/boryszef/django-ltree/pulls
  - Documentation `TODO`
 
-[![PyPI version](https://badge.fury.io/py/django-ltree.svg)](https://badge.fury.io/py/django-ltree)
-
 ## Install
 
 ```
