@@ -71,7 +71,7 @@ class PathField(TextField):
         super(PathField, self).contribute_to_class(cls, name)
         setattr(cls, self.name, PathValueProxy(self.name))
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection, *args):
         if value is None:
             return value
         return PathValue(value)

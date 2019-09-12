@@ -20,7 +20,6 @@ class PathGenerator(object):
         for val in self.product_iterator:
             label = ''.join(val)
             path = PathValue(self.path_prefix + [label])
-            print(path, self.skip_paths)
             if path not in self.skip_paths:
                 return path
 

@@ -1,13 +1,11 @@
+import pytest
+
 from taxonomy.models import Taxonomy
 
 
 TEST_DATA = [
-    {
-        'name': 'Bacteria'
-    },
-    {
-        'name': 'Plantae',
-    },
+    {'name': 'Bacteria'},
+    {'name': 'Plantae'},
     {
         'name': 'Animalia',
         'sub': [
@@ -25,16 +23,11 @@ TEST_DATA = [
                                         'sub': [
                                             {
                                                 'name': 'Canis',
-                                                'sub': [
-                                                    {'name': 'Canis lupus'},
-                                                    {'name': 'Canis rufus'}
-                                                ]
+                                                'sub': [{'name': 'Canis lupus'}, {'name': 'Canis rufus'}]
                                             },
                                             {
                                                 'name': 'Urocyon',
-                                                'sub': [
-                                                    {'name': 'Urocyon cinereoargenteus'}
-                                                ]
+                                                'sub': [{'name': 'Urocyon cinereoargenteus'}]
                                             }
                                         ]
                                     },
@@ -48,10 +41,12 @@ TEST_DATA = [
                                                         'name': 'Felinae',
                                                         'sub': [
                                                             {
+                                                                'name': 'Lynx',
+                                                                'sub': [{'name': 'Lynx lynx'}, {'name': 'Lynx rufus'}]
+                                                            },
+                                                            {
                                                                 'name': 'Puma',
-                                                                'sub': [
-                                                                    {'name': 'Puma concolor'}
-                                                                ]
+                                                                'sub': [{'name': 'Puma concolor'}]
                                                             }
                                                         ]
                                                     }
@@ -72,8 +67,34 @@ TEST_DATA = [
                                                 'sub': [
                                                     {
                                                         'name': 'Bradypus',
+                                                        'sub': [{'name': 'Bradypus tridactylus'}]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        'name': 'Reptilia',
+                        'sub': [
+                            {
+                                'name': 'Squamata',
+                                'sub': [
+                                    {
+                                        'name': 'Iguania',
+                                        'sub': [
+                                            {
+                                                'name': 'Agamidae',
+                                                'sub': [
+                                                    {
+                                                        'name': 'Pogona',
                                                         'sub': [
-                                                            {'name': 'Bradypus tridactylus'}
+                                                            {'name': 'Pogona barbata'},
+                                                            {'name': 'Pogona minor'},
+                                                            {'name': 'Pogona vitticeps'}
                                                         ]
                                                     }
                                                 ]
@@ -113,10 +134,18 @@ def test_roots(db):
     assert set(roots) == set(['Bacteria', 'Plantae', 'Animalia'])
 
 
-def test_children(db):
+@pytest.mark.parametrize(
+    'name, expected', [
+        ('Animalia', ['Chordata']),
+        ('Mammalia', ['Carnivora', 'Pilosa']),
+        ('Reptilia', ['Squamata']),
+        ('Pogona', ['Pogona barbata', 'Pogona minor', 'Pogona vitticeps'])
+    ]
+)
+def test_children(db, name, expected):
     create_test_data()
-    children = Taxonomy.objects.get(name='Mammalia').children().values_list('name', flat=True)
-    assert set(children) == set(['Carnivora', 'Pilosa'])
+    children = Taxonomy.objects.get(name=name).children().values_list('name', flat=True)
+    assert set(children) == set(expected)
 
 
 def test_label(db):
@@ -126,25 +155,53 @@ def test_label(db):
         assert label.isalnum()
         assert str(item.path).endswith(label)
 
-def test_ancestors(db):
+
+@pytest.mark.parametrize(
+    'name, expected', [
+        ('Canis lupus', ['Animalia', 'Chordata', 'Mammalia', 'Carnivora', 'Canidae', 'Canis']),
+        ('Bacteria', []),
+        ('Chordata', ['Animalia'])
+    ]
+)
+def test_ancestors(db, name, expected):
     create_test_data()
-    ancestors = Taxonomy.objects.get(name='Canis lupus').ancestors().values_list('name', flat=True)
-    assert list(ancestors) == ['Animalia', 'Chordata', 'Mammalia', 'Carnivora', 'Canidae', 'Canis']
+    ancestors = Taxonomy.objects.get(name=name).ancestors().values_list('name', flat=True)
+    assert list(ancestors) == expected
 
 
-def test_descendants(db):
+@pytest.mark.parametrize(
+    'name, expected', [
+        ('Canidae', ['Canis', 'Canis lupus', 'Canis rufus', 'Urocyon', 'Urocyon cinereoargenteus']),
+        ('Bradypus tridactylus', []),
+        ('Pogona', ['Pogona barbata', 'Pogona minor', 'Pogona vitticeps'])
+    ]
+)
+def test_descendants(db, name, expected):
     create_test_data()
-    descendants = Taxonomy.objects.get(name='Canidae').descendants().values_list('name', flat=True)
-    assert set(descendants) == set(['Canis', 'Canis lupus', 'Canis rufus', 'Urocyon', 'Urocyon cinereoargenteus'])
+    descendants = Taxonomy.objects.get(name=name).descendants().values_list('name', flat=True)
+    assert set(descendants) == set(expected)
 
 
-def test_parent(db):
+@pytest.mark.parametrize(
+    'name, expected', [
+        ('Feliformia', 'Carnivora'),
+        ('Plantae', None),
+        ('Pogona minor', 'Pogona')
+    ]
+)
+def test_parent(db, name, expected):
     create_test_data()
-    parent = Taxonomy.objects.get(name='Feliformia').parent()
-    assert parent.name == 'Carnivora'
+    parent = Taxonomy.objects.get(name=name).parent()
+    assert getattr(parent, 'name', None) == expected
 
 
-def test_siblings(db):
+@pytest.mark.parametrize(
+    'name, expected', [
+        ('Carnivora', ['Pilosa']),
+        ('Pogona vitticeps', ['Pogona minor', 'Pogona barbata'])
+    ]
+)
+def test_siblings(db, name, expected):
     create_test_data()
-    siblings = Taxonomy.objects.get(name='Carnivora').siblings().values_list('name', flat=True)
-    assert set(siblings) == set(['Pilosa'])
+    siblings = Taxonomy.objects.get(name=name).siblings().values_list('name', flat=True)
+    assert set(siblings) == set(expected)
