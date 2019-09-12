@@ -1,8 +1,5 @@
-try:
-    import django
-    from django.conf import settings
-except ImportError:
-    raise ImportError("To fix this error, run: pip install -r requirements.txt")
+import django
+from django.conf import settings
 
 
 def pytest_sessionstart(session):
