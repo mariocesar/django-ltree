@@ -205,3 +205,9 @@ def test_siblings(db, name, expected):
     create_test_data()
     siblings = Taxonomy.objects.get(name=name).siblings().values_list('name', flat=True)
     assert set(siblings) == set(expected)
+
+
+def test_slicing(db):
+    create_test_data()
+    qs = Taxonomy.objects.all()
+    assert qs[:3].count() == 3
