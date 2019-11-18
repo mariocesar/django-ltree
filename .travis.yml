@@ -34,10 +34,9 @@ stages:
 jobs:
     fast_finish: true
     include:
+
     - stage: test
       python: 3.8
-      after_success:
-        - codecov
 
     - stage: publish
       python: 3.8
