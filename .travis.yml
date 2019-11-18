@@ -18,9 +18,9 @@ install:
   - pip install coverage codecov
   - pip install tox-travis
   - python setup.py bdist_wheel
-  - pip install ./dist/django_ltree-*.whl
+  - pip install "$(ls ./dist/django_ltree-*.whl)"
 
-script: tox --installpkg ./dist/django_ltree-*.whl
+script: tox --installpkg "$(ls ./dist/django_ltree-*.whl)"
 
 after_success:
   - coverage combine && codecov
