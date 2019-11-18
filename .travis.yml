@@ -6,7 +6,7 @@ python:
   - 3.7
   - 3.8
 env:
-    DJANGO_DATABASE_HOST: localhost
+  - DJANGO_DATABASE_HOST=localhost
 services:
   - postgresql
 install:
