@@ -1,8 +1,6 @@
 sudo: false
 language: python
 cache: pip
-env:
-  - DJANGO_DATABASE_HOST=localhost
 
 python:
   - 2.7
