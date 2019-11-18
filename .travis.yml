@@ -17,10 +17,8 @@ install:
   - pip install wheel
   - pip install coverage codecov
   - pip install tox-travis
-  - python setup.py bdist_wheel
-  - pip install "$(ls ./dist/django_ltree-*.whl)"
 
-script: tox --installpkg "$(ls ./dist/django_ltree-*.whl)"
+script: tox
 
 after_success:
   - coverage combine && codecov
@@ -38,13 +36,13 @@ jobs:
 
     - stage: publish
       python: 3.8
-      install: true
+      install: python setup.py sdist bdist_wheel
       script: true
       after_success: true
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         skip_cleanup: true
-        file: dist/*.whl
+        file: dist/*
         on:
           tags: true
