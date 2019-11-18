@@ -8,6 +8,8 @@ The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
 This fork contains a backport to Django 1.11 and Python 2.7.
 
+[![Build Status](https://travis-ci.org/mariocesar/django-ltree.svg?branch=master)](https://travis-ci.org/mariocesar/django-ltree)
+
 ## Links
 
  - Pypi https://pypi.org/project/django-ltree/
