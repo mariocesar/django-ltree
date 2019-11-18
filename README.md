@@ -10,6 +10,9 @@ This fork contains a backport to Django 1.11 and Python 2.7.
 
 [![Build Status](https://travis-ci.org/mariocesar/django-ltree.svg?branch=master)](https://travis-ci.org/mariocesar/django-ltree)
 
+[![codecov](https://codecov.io/gh/mariocesar/django-ltree/branch/master/graph/badge.svg)](https://codecov.io/gh/mariocesar/django-ltree)
+
+
 ## Links
 
  - Pypi https://pypi.org/project/django-ltree/
