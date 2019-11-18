@@ -44,9 +44,13 @@ jobs:
       script: python setup.py sdist bdist_wheel
       after_success: true
       deploy:
+        edge: true
         provider: releases
-        api_key: $GITHUB_OAUTH_TOKEN
+        name: $TRAVIS_TAG
+        target_commitish: $TRAVIS_COMMIT
+        api_key: "$GITHUB_OAUTH_TOKEN"
         skip_cleanup: true
         file: dist/*
         on:
+          branch: master
           tags: true
