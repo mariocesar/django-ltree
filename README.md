@@ -12,6 +12,8 @@ This fork contains a backport to Django 1.11 and Python 2.7.
 
 [![codecov](https://codecov.io/gh/mariocesar/django-ltree/branch/master/graph/badge.svg)](https://codecov.io/gh/mariocesar/django-ltree)
 
+[![Coverage Status](https://coveralls.io/repos/github/mariocesar/django-ltree/badge.svg?branch=master)](https://coveralls.io/github/mariocesar/django-ltree?branch=master)
+
 
 ## Links
 
