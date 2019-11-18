@@ -15,6 +15,9 @@ install:
   - pip install coverage codecov
   - pip install wheel
 
+script:
+  - tox
+
 after_success:
   - pip install codecov coveralls
   - codecov --required -n "py${TRAVIS_PYTHON_VERSION}"
@@ -22,9 +25,6 @@ after_success:
 
 notifications:
   webhooks: https://coveralls.io/webhook
-
-script:
-  - tox
 
 stages:
   - test
