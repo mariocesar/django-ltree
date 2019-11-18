@@ -16,9 +16,7 @@ class TreeModel(models.Model):
         return self.path[-1]
 
     def get_ancestors_paths(self):  # type: () -> List[List[str]]
-        return [
-            PathValue(self.path[:n]) for n, p in enumerate(self.path) if n > 0
-        ]
+        return [PathValue(self.path[:n]) for n, p in enumerate(self.path) if n > 0]
 
     def ancestors(self):
         return (

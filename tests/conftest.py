@@ -1,3 +1,4 @@
+import os
 import django
 from django.conf import settings
 
@@ -10,8 +11,8 @@ def pytest_sessionstart(session):
             "default": {
                 "ENGINE": "django.db.backends.postgresql",
                 "NAME": "ltree_test",
-                "HOST": "localhost",
-                "USER": "postgres",
+                "HOST": os.environ.get("DJANGO_DATABASE_HOST", "database"),
+                "USER": os.environ.get("DJANGO_DATABASE_USER", "postgres"),
             }
         },
         ROOT_URLCONF="tests.urls",
