@@ -1,10 +1,11 @@
 
 default:
+	pip install -e .[develop]
 	cd example && pip install -r requirements.txt
 
 publish: clean
-	./venv/bin/python setup.py bdist_wheel
-	./venv/bin/twine upload dist/*
+	python setup.py bdist_wheel
+	twine upload dist/*
 
 clean:
 	rm -rf dist/
