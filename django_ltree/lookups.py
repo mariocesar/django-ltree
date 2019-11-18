@@ -41,3 +41,9 @@ class DescendantLookup(SimpleLookup):
 class MatchLookup(SimpleLookup):
     lookup_name = "match"
     lookup_operator = "~"
+
+
+@PathField.register_lookup
+class ContainsLookup(SimpleLookup):
+    lookup_name = "contains"
+    lookup_operator = "?"

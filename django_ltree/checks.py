@@ -7,6 +7,7 @@ def check_database_backend_is_postgres(app_configs, **kwargs):
 
     errors = []
     valid_dbs = ["postgres", "postgis"]
+
     if not any(d in settings.DATABASES["default"]["ENGINE"] for d in valid_dbs):
         errors.append(
             Warning(
