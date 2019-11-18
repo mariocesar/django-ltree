@@ -41,4 +41,10 @@ jobs:
       install: true
       script: true
       after_success: true
-      script: echo "Deploy to pypi"
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        skip_cleanup: true
+        file: dist/*.whl
+        on:
+          tags: true
