@@ -7,13 +7,20 @@ python:
   - 3.7
   - 3.8
 
-install:
-    - pip install tox-travis
-    - pip install coverage codecov
-    - pip install wheel
-
 services:
   - postgresql
+
+install:
+  - pip install tox-travis
+  - pip install coverage codecov
+  - pip install wheel
+
+after_success:
+  - pip install codecov coveralls
+  - codecov --required -n "py${TRAVIS_PYTHON_VERSION}-pip${PIP}-${TRAVIS_OS_NAME}"
+
+script:
+  - tox
 
 stages:
   - test
@@ -25,8 +32,6 @@ jobs:
     include:
     - stage: test
       python: 3.8
-      script:
-        - tox
       after_success:
         - codecov
 
