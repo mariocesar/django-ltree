@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  database:
+    image: postgres:10
+    volumes:
+      - "pgdata:/var/lib/postgresql/data"
+
+  backend:
+    build: .
+    hostname: django-ltree
+    volumes:
+      - ".:/app"
+    ports:
+      - "8000:8000"
+    links:
+      - "database:database"
+
+volumes:
+  pgdata:
+  pyenv:
