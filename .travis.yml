@@ -1,7 +1,6 @@
 sudo: false
 language: python
 cache: pip
-
 python:
   - 2.7
   - 3.6
@@ -11,16 +10,6 @@ python:
 services:
   - postgresql
 
-install:
-  - pip install wheel
-  - pip install coverage codecov
-  - pip install tox-travis
-
-script: tox
-
-after_success:
-  - coverage combine && codecov
-
 stages:
   - test
   - name: publish
@@ -29,13 +18,22 @@ stages:
 jobs:
     fast_finish: true
     include:
-    - python: 3.8
-      script: tox
+    - stage: test
+      python: 3.8
+      install:
+        - pip install coverage codecov
+        - pip install tox-travis
+      script:
+        - tox
+      after_success:
+        - codecov
 
     - stage: publish
       python: 3.8
-      install: python setup.py sdist bdist_wheel
-      script: true
+      install:
+        - pip install wheel
+      script:
+        - python setup.py sdist bdist_wheel
       after_success: true
       deploy:
         provider: releases
