@@ -17,9 +17,8 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=find_packages(exclude=("example",)),
-    install_requires=[
-        "django>=2.0",
-    ],
+    install_requires=["django>=2.0"],
+    extras_require={"develop": ["pytest"]},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Django",
