@@ -7,13 +7,13 @@ with open("README.md", "r") as fh:
 
 
 setup(
-    name="django_ltree_fork",
-    version="0.4.4",
+    name="django_ltree",
+    version="0.5",
     python_requires=">=2.7",
     url="https://github.com/mariocesar/django-ltree",
-    author="Borys Szefczyk",
-    author_email="boryszef@gmail.com",
-    description="django implemention of the ltree postgres extension - this is a backport to Python 2.7/Django 1.11",
+    author="Mario César Señoranis Ayala",
+    author_email="mariocesar@humanzilla.com",
+    description="Django app to support ltree postgres extension",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
@@ -23,9 +23,17 @@ setup(
     classifiers=[
         "Development Status :: 4 - Beta",
         "Framework :: Django",
+        "Framework :: Django :: 1.11",
+        "Framework :: Django :: 2.1",
+        "Framework :: Django :: 2.2",
         "Intended Audience :: Developers",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
     project_urls={
         "Source": "https://github.com/mariocesar/django_ltree",

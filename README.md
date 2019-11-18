@@ -11,9 +11,9 @@ This fork contains a backport to Django 1.11 and Python 2.7.
 ## Links
 
  - Pypi https://pypi.org/project/django-ltree/
- - Source code https://github.com/boryszef/django-ltree
- - Bugs https://github.com/boryszef/django-ltree/issues
- - Contribute https://github.com/boryszef/django-ltree/pulls
+ - Source code https://github.com/mariocesar/django-ltree
+ - Bugs https://github.com/mariocesar/django-ltree/issues
+ - Contribute https://github.com/mariocesar/django-ltree/pulls
  - Documentation `TODO`
 
 ## Install

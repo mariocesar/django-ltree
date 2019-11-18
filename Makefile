@@ -1,7 +1,6 @@
 
 default:
 	pip install -e .[develop]
-	cd example && pip install -r requirements.txt
 
 publish: clean
 	python setup.py bdist_wheel
@@ -12,4 +11,4 @@ clean:
 	rm -rf build/
 
 backend:
-	docker-compose run --rm --service-ports backend --shell
+	docker-compose run --rm --service-ports backend bash
