@@ -1,0 +1,52 @@
+sudo: false
+language: python
+cache: pip
+python:
+  - 2.7
+  - 3.6
+  - 3.7
+  - 3.8
+
+services:
+  - postgresql
+
+install:
+  - pip install tox-travis
+  - pip install coverage codecov
+  - pip install wheel
+
+script:
+  - tox
+
+after_success:
+  - pip install codecov coveralls
+  - codecov --required -n "py${TRAVIS_PYTHON_VERSION}"
+  - "COVERALLS_PARALLEL=true coveralls"
+
+notifications:
+  webhooks: https://coveralls.io/webhook
+
+stages:
+  - test
+  - name: publish
+    if: tag IS present
+
+jobs:
+    fast_finish: true
+    include:
+
+    - stage: test
+      python: 3.8
+
+    - stage: publish
+      python: 3.8
+      install: true
+      script: python setup.py sdist bdist_wheel
+      after_success: true
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        skip_cleanup: true
+        file: dist/*
+        on:
+          tags: true

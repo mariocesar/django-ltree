@@ -2,6 +2,8 @@ from django.db.models import Transform
 from django.db.models import fields
 from .fields import PathField
 
+from django_ltree.fields import PathField
+
 __all__ = ("NLevel",)
 
 
@@ -9,4 +11,7 @@ __all__ = ("NLevel",)
 class NLevel(Transform):
     lookup_name = "depth"
     function = "nlevel"
-    output_field = fields.IntegerField()
+
+    @property
+    def output_field(self):
+        return fields.IntegerField()

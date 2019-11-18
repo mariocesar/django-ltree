@@ -4,13 +4,13 @@ from .fields import PathField
 
 
 class SimpleLookup(Lookup):
-    lookup_operator: str = "="
+    lookup_operator = "="  # type: str
 
     def as_sql(self, compiler, connection):
         lhs, lhs_params = self.process_lhs(compiler, connection)
         rhs, rhs_params = self.process_rhs(compiler, connection)
         params = lhs_params + rhs_params
-        return f"{lhs} {self.lookup_operator} {rhs}", params
+        return "{} {} {}".format(lhs, self.lookup_operator, rhs), params
 
 
 @PathField.register_lookup
@@ -22,7 +22,7 @@ class EqualLookup(Lookup):
         rhs, rhs_params = self.process_rhs(compiler, connection)
         params = lhs_params + rhs_params
 
-        return f"{lhs} = {rhs}", params
+        return "{} = {}".format(lhs, rhs), params
 
 
 @PathField.register_lookup
@@ -41,3 +41,9 @@ class DescendantLookup(SimpleLookup):
 class MatchLookup(SimpleLookup):
     lookup_name = "match"
     lookup_operator = "~"
+
+
+@PathField.register_lookup
+class ContainsLookup(SimpleLookup):
+    lookup_name = "contains"
+    lookup_operator = "?"

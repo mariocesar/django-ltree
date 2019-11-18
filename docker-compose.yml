@@ -5,13 +5,12 @@ services:
     image: postgres:10
     volumes:
       - "pgdata:/var/lib/postgresql/data"
-  
+
   backend:
-    image: humanzilla/python:develop
+    build: .
     hostname: django-ltree
     volumes:
       - ".:/app"
-      - "pyenv:/python"
     ports:
       - "8000:8000"
     links:

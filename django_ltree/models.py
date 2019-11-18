@@ -1,5 +1,3 @@
-from typing import List
-
 from django.db import models
 
 from .managers import TreeManager
@@ -7,7 +5,7 @@ from .fields import PathField, PathValue
 
 
 class TreeModel(models.Model):
-    path = PathField()
+    path = PathField(unique=True)
     objects = TreeManager()
 
     class Meta:
@@ -17,10 +15,8 @@ class TreeModel(models.Model):
     def label(self):
         return self.path[-1]
 
-    def get_ancestors_paths(self) -> List[List[str]]:
-        return [
-            PathValue(self.path[:n]) for n, p in enumerate(self.path) if n > 0
-        ]
+    def get_ancestors_paths(self):  # type: () -> List[List[str]]
+        return [PathValue(self.path[:n]) for n, p in enumerate(self.path) if n > 0]
 
     def ancestors(self):
         return (
@@ -49,4 +45,5 @@ class TreeModel(models.Model):
             type(self)
             ._default_manager.filter(path__descendants=".".join(parent))
             .filter(path__depth=len(self.path))
+            .exclude(path=self.path)
         )
