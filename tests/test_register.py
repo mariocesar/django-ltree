@@ -18,5 +18,4 @@ def test_registered_lookups():
     assert registered_lookups["depth"] is functions.NLevel
 
     assert "contains" in registered_lookups, "Missing 'contains' in lookups"
-    assert registered_lookups["contains"] is functions.ContainsLookup
-
+    assert registered_lookups["contains"] is lookups.ContainsLookup
