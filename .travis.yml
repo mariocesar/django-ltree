@@ -7,6 +7,11 @@ python:
   - 3.7
   - 3.8
 
+install:
+    - pip install tox-travis
+    - pip install coverage codecov
+    - pip install wheel
+
 services:
   - postgresql
 
@@ -20,9 +25,6 @@ jobs:
     include:
     - stage: test
       python: 3.8
-      install:
-        - pip install coverage codecov
-        - pip install tox-travis
       script:
         - tox
       after_success:
@@ -30,10 +32,8 @@ jobs:
 
     - stage: publish
       python: 3.8
-      install:
-        - pip install wheel
-      script:
-        - python setup.py sdist bdist_wheel
+      install: true
+      script: python setup.py sdist bdist_wheel
       after_success: true
       deploy:
         provider: releases
