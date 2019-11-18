@@ -11,6 +11,7 @@ services:
   - postgresql
 install:
   - pip install tox-travis
+  - pip install codecov
   - pip install ".[develop]"
 
 script: tox
