@@ -18,7 +18,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     packages=find_packages(exclude=("example",)),
-    extras_require={"develop": ["pytest", "tox"]},
+    extras_require={"develop": ["twine", "tox"]},
     install_requires=["django>=1.11", "six"],
     classifiers=[
         "Development Status :: 4 - Beta",
