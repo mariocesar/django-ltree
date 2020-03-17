@@ -1,7 +1,7 @@
 from django.db import models
 
-from .managers import TreeManager
 from .fields import PathField, PathValue
+from .managers import TreeManager
 
 
 class TreeModel(models.Model):
@@ -19,18 +19,10 @@ class TreeModel(models.Model):
         return [PathValue(self.path[:n]) for n, p in enumerate(self.path) if n > 0]
 
     def ancestors(self):
-        return (
-            type(self)
-            ._default_manager.filter(path__ancestors=self.path)
-            .exclude(id=self.id)
-        )
+        return type(self)._default_manager.filter(path__ancestors=self.path)
 
     def descendants(self):
-        return (
-            type(self)
-            ._default_manager.filter(path__descendants=self.path)
-            .exclude(id=self.id)
-        )
+        return type(self)._default_manager.filter(path__descendants=self.path)
 
     def parent(self):
         if len(self.path) > 1:
@@ -47,3 +39,9 @@ class TreeModel(models.Model):
             .filter(path__depth=len(self.path))
             .exclude(path=self.path)
         )
+
+    def add_child(self, *, slug: str, **kwargs):
+        assert "path" not in kwargs
+        kwargs["path"] = [*self.path, slug]
+        kwargs["slug"] = slug
+        return type(self)._default_manager.create(**kwargs)

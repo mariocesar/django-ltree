@@ -16,10 +16,10 @@ class TreeManager(models.Manager):
         return TreeQuerySet(model=self.model, using=self._db).order_by("path")
 
     def roots(self):
-        return self.get_queryset().roots()
+        return self.filter().roots()
 
     def children(self, path):
-        return self.get_queryset().children(path)
+        return self.filter().children(path)
 
     def create_child(self, parent=None, **kwargs):
         paths_in_use = parent.children() if parent else self.roots()
