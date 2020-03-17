@@ -1,3 +1,6 @@
+from collections import UserList
+from typing import Union
+
 from django import forms
 from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
@@ -5,16 +8,16 @@ from django.forms.widgets import TextInput
 from six import string_types
 
 
-class PathValue(list):
-    def __init__(self, val):  # type: (Union[list, str]) -> None
-        if isinstance(val, str):
-            val = val.split(".")
-        elif isinstance(val, list):
-            val = val
+class PathValue(UserList):
+    def __init__(self, value):  # type: (Union[list, str]) -> None
+        if isinstance(value, str):
+            value = value.strip().split(".") if value else []
+        elif isinstance(value, list):
+            value = [str(val) for val in value]
         else:
-            raise ValueError("Invalid value for path: {}".format(val))
+            raise ValueError("Invalid value: {!r} for path".format(value))
 
-        super(PathValue, self).__init__(val)
+        super().__init__(value)
 
     def __repr__(self):
         return str(self)
