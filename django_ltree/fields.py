@@ -1,4 +1,5 @@
 from collections import UserList
+from collections.abc import Iterable
 from typing import Union
 
 from django import forms
@@ -9,13 +10,11 @@ from six import string_types
 
 
 class PathValue(UserList):
-    def __init__(self, value):  # type: (Union[list, str]) -> None
+    def __init__(self, value):  # type: (Union[Iterable, str]) -> None
         if isinstance(value, str):
-            value = value.strip().split(".") if value else []
-        elif isinstance(value, list):
-            value = [str(val) for val in value]
-        elif isinstance(value, PathValue):
-            value = value.data
+            value = value.strip().split('.') if value else []
+        elif isinstance(value, Iterable):
+            value = [str(v) for v in value]
         else:
             raise ValueError("Invalid value: {!r} for path".format(value))
 
