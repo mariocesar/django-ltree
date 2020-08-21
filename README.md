@@ -1,6 +1,6 @@
 # django-ltree
 
-An tree extension implementation to support hierarchical tree-like data in Django models,
+A tree extension implementation to support hierarchical tree-like data in Django models,
 using the native Postgres extension `ltree`.
 
 Postgresql has already a optimized and very useful tree implementation for data.
