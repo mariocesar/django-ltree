@@ -158,9 +158,9 @@ def test_label(db):
 
 @pytest.mark.parametrize(
     'name, expected', [
-        ('Canis lupus', ['Animalia', 'Chordata', 'Mammalia', 'Carnivora', 'Canidae', 'Canis']),
-        ('Bacteria', []),
-        ('Chordata', ['Animalia'])
+        ('Canis lupus', ['Animalia', 'Chordata', 'Mammalia', 'Carnivora', 'Canidae', 'Canis', 'Canis lupus']),
+        ('Bacteria', ['Bacteria']),
+        ('Chordata', ['Animalia', 'Chordata'])
     ]
 )
 def test_ancestors(db, name, expected):
@@ -171,9 +171,9 @@ def test_ancestors(db, name, expected):
 
 @pytest.mark.parametrize(
     'name, expected', [
-        ('Canidae', ['Canis', 'Canis lupus', 'Canis rufus', 'Urocyon', 'Urocyon cinereoargenteus']),
-        ('Bradypus tridactylus', []),
-        ('Pogona', ['Pogona barbata', 'Pogona minor', 'Pogona vitticeps'])
+        ('Canidae', ['Canidae', 'Canis', 'Canis lupus', 'Canis rufus', 'Urocyon', 'Urocyon cinereoargenteus']),
+        ('Bradypus tridactylus', ['Bradypus tridactylus']),
+        ('Pogona', ['Pogona', 'Pogona barbata', 'Pogona minor', 'Pogona vitticeps'])
     ]
 )
 def test_descendants(db, name, expected):
