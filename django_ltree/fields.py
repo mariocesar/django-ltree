@@ -10,7 +10,7 @@ from six import string_types
 
 
 class PathValue(UserList):
-    def __init__(self, value):  # type: (Union[list, str]) -> None
+    def __init__(self, value):  # type: (Union[Iterable, str]) -> None
         if isinstance(value, str):
             value = value.strip().split('.') if value else []
         elif isinstance(value, Iterable):
