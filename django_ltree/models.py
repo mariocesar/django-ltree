@@ -40,7 +40,7 @@ class TreeModel(models.Model):
             .exclude(path=self.path)
         )
 
-    def add_child(self, *, slug: str, **kwargs):
+    def add_child(self, slug: str, **kwargs):
         assert "path" not in kwargs
         kwargs["path"] = [*self.path, slug]
         kwargs["slug"] = slug
