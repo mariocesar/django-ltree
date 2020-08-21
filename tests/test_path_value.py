@@ -9,11 +9,12 @@ def test_create():
     assert str(PathValue('hello.world')) == 'hello.world'
 
     def generator():
-        yield from '100 bottles of beer'.split(' ')
+        yield '100'
+        yield 'bottles'
+        yield 'of'
+        yield 'beer'
 
     assert str(PathValue(generator())) == '100.bottles.of.beer'
 
     with pytest.raises(ValueError):
         PathValue(4)
-
-
