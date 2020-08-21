@@ -23,7 +23,7 @@ class PathValue(UserList):
         else:
             raise ValueError("Invalid value: {!r} for path".format(value))
 
-        super().__init__(value)
+        super(PathValue, self).__init__(value)
 
     def __repr__(self):
         return str(self)
