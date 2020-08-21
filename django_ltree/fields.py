@@ -1,12 +1,19 @@
-from collections import UserList
-from collections.abc import Iterable
 from typing import Union
 
 from django import forms
 from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
+
+from six import PY3
 from six import string_types
+from six.moves import UserList
+
+
+if PY3:
+    from collections.abc import Iterable
+else:
+    from collections import Iterable
 
 
 class PathValue(UserList):
