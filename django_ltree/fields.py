@@ -1,5 +1,3 @@
-from typing import Union
-
 from django import forms
 from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
