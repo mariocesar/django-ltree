@@ -7,7 +7,6 @@ from six import PY3
 from six import string_types
 from six.moves import UserList
 
-
 if PY3:
     from collections.abc import Iterable
 else:
@@ -18,12 +17,14 @@ class PathValue(UserList):
     def __init__(self, value):  # type: (Union[Iterable, str]) -> None
         if isinstance(value, str):
             value = value.strip().split('.') if value else []
+        elif isinstance(value, (int, float)):
+            value = [str(int)]
         elif isinstance(value, Iterable):
             value = [str(v) for v in value]
         else:
             raise ValueError("Invalid value: {!r} for path".format(value))
 
-        super(PathValue, self).__init__(value)
+        super(PathValue, self).__init__(initlist=value)
 
     def __repr__(self):
         return str(self)
