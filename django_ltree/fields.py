@@ -18,7 +18,7 @@ class PathValue(UserList):
         if isinstance(value, str):
             value = value.strip().split('.') if value else []
         elif isinstance(value, (int, float)):
-            value = [str(int)]
+            value = [str(value)]
         elif isinstance(value, Iterable):
             value = [str(v) for v in value]
         else:
