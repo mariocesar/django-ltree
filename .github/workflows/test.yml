@@ -34,7 +34,7 @@ jobs:
             python-version: ${{ matrix.python-version }}
         - name: Depedencies
           run: |
-            python -m pip install pytest
+            python -m pip install pytest pyscopg2-binary
             python setup.py develop
         - name: Run tests
           run: pytest -x -vv tests/
