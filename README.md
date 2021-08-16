@@ -6,13 +6,9 @@ using the native Postgres extension `ltree`.
 Postgresql has already a optimized and very useful tree implementation for data.
 The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
 
-This fork contains a backport to Django 1.11 and Python 2.7.
+This fork contains a backport to Django 1.11 and Python 3.6.
 
-[![Build Status](https://travis-ci.org/mariocesar/django-ltree.svg?branch=master)](https://travis-ci.org/mariocesar/django-ltree)
-
-[![codecov](https://codecov.io/gh/mariocesar/django-ltree/branch/master/graph/badge.svg)](https://codecov.io/gh/mariocesar/django-ltree)
-
-[![Coverage Status](https://coveralls.io/repos/github/mariocesar/django-ltree/badge.svg?branch=master)](https://coveralls.io/github/mariocesar/django-ltree?branch=master)
+[![Test](https://github.com/mariocesar/django-ltree/actions/workflows/test.yml/badge.svg)](https://github.com/mariocesar/django-ltree/actions/workflows/test.yml)
 
 
 ## Links
