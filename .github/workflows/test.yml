@@ -35,7 +35,7 @@ jobs:
         - name: Depedencies
           run: |
             python -m pip install wheel
-            python -m pip install pytest psycopg2-binary
+            python -m pip install pytest pytest-django pytest-cov psycopg2-binary
             python setup.py develop
         - name: Run tests
-          run: pytest -x -vv tests/
+          run: pytest -v -x --cov=django_ltree tests/
