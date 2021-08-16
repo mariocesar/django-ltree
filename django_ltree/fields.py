@@ -1,20 +1,14 @@
+from collections import UserList
 from django import forms
 from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
 
-from six import PY3
-from six import string_types
-from six.moves import UserList
-
-if PY3:
-    from collections.abc import Iterable
-else:
-    from collections import Iterable
+from collections.abc import Iterable
 
 
 class PathValue(UserList):
-    def __init__(self, value):  # type: (Union[Iterable, str]) -> None
+    def __init__(self, value):
         if isinstance(value, str):
             split_by = "/" if "/" in str else "."
             value = value.strip().split(split_by) if value else []
@@ -25,7 +19,7 @@ class PathValue(UserList):
         else:
             raise ValueError("Invalid value: {!r} for path".format(value))
 
-        super(PathValue, self).__init__(initlist=value)
+        super().__init__(initlist=value)
 
     def __repr__(self):
         return str(self)
@@ -35,7 +29,7 @@ class PathValue(UserList):
 
 
 class PathValueProxy:
-    def __init__(self, field_name):  # type: (str) -> None
+    def __init__(self, field_name):
         self.field_name = field_name
 
     def __get__(self, instance, owner):
@@ -76,10 +70,10 @@ class PathField(TextField):
     def formfield(self, **kwargs):
         kwargs["form_class"] = PathFormField
         kwargs["widget"] = TextInput(attrs={"class": "vTextField"})
-        return super(PathField, self).formfield(**kwargs)
+        return super().formfield(**kwargs)
 
     def contribute_to_class(self, cls, name, private_only=False):
-        super(PathField, self).contribute_to_class(cls, name)
+        super().contribute_to_class(cls, name)
         setattr(cls, self.name, PathValueProxy(self.name))
 
     def from_db_value(self, value, expression, connection, *args):
@@ -105,7 +99,7 @@ class PathField(TextField):
             return value
         elif isinstance(value, PathValue):
             return str(value)
-        elif isinstance(value, (list, string_types)):
+        elif isinstance(value, (list, str)):
             return str(PathValue(value))
 
         raise ValueError("Unknown value type {}".format(type(value)))
