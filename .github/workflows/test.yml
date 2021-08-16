@@ -37,5 +37,17 @@ jobs:
             python -m pip install wheel
             python -m pip install pytest pytest-django pytest-cov psycopg2-binary
             python setup.py develop
+
         - name: Run tests
-          run: pytest -v -x --cov=django_ltree tests/
+          run: >-
+            pytest -v -x
+            --cov=django_ltree
+            --junitxml=junit/test-results-${{ matrix.python-version }}.xml
+            tests/
+
+        - name: Upload pytest test results
+          uses: actions/upload-artifact@v2
+          with:
+            name: pytest-results-${{ matrix.python-version }}
+            path: junit/test-results-${{ matrix.python-version }}.xml
+          if: ${{ always() }}
