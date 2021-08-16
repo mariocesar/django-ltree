@@ -17,7 +17,7 @@ class PathValue(UserList):
     def __init__(self, value):  # type: (Union[Iterable, str]) -> None
         if isinstance(value, str):
             value = value.strip().split('.') if value else []
-        elif isinstance(value, (int, float)):
+        elif isinstance(value, int):
             value = [str(value)]
         elif isinstance(value, Iterable):
             value = [str(v) for v in value]
@@ -56,7 +56,7 @@ class PathValueProxy:
 
 
 path_label_validator = RegexValidator(
-    r"^[A-Za-z0-9_.]+$",
+    r"^(?P<root>[a-zA-Z][a-zA-Z0-9_]*)(?:.[a-zA-Z|a-zA-Z0-9_]+)*$",
     "A label is a sequence of alphanumeric characters and underscores separated by dots.",
     "invalid",
 )

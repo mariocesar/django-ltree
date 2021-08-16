@@ -7,6 +7,7 @@ def test_create():
     assert str(PathValue([1, 2, 3, 4, 5])) == '1.2.3.4.5'
     assert str(PathValue((1, 3, 5, 7))) == '1.3.5.7'
     assert str(PathValue('hello.world')) == 'hello.world'
+    assert str(PathValue(5)) == "5"
 
     def generator():
         yield '100'
@@ -15,6 +16,3 @@ def test_create():
         yield 'beer'
 
     assert str(PathValue(generator())) == '100.bottles.of.beer'
-
-    with pytest.raises(ValueError):
-        PathValue(4)
