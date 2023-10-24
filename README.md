@@ -21,7 +21,7 @@ This fork contains a backport to Django 1.11 and Python 3.6.
 
 ## Install
 
-```
+```python
 pip install django-ltree
 ```
 
@@ -29,7 +29,7 @@ Then add `django_ltree` to `INSTALLED_APPS` in your Django project settings.
 
 And make sure to run `django_ltree` migrations before you added the `PathField`
 
-```
+```python
 python manage.py migrate django_ltree
 ```
 
@@ -38,7 +38,7 @@ python manage.py migrate django_ltree
 You can alternatively specify the `django_ltree` dependency in the migrations of
 your applications that requires `PathField`, and run migrations smoothly.
 
-```
+```python
 class Migration(migrations.Migration):
     dependencies = [
             ('django_ltree', '__latest__'),
