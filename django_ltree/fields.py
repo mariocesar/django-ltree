@@ -6,6 +6,11 @@ from django.forms.widgets import TextInput
 
 from collections.abc import Iterable
 
+path_label_validator = RegexValidator(
+    r"^(?P<root>[a-zA-Z][a-zA-Z0-9_]*|\d+)(?:\.[a-zA-Z0-9_]+)*$",
+    "A label is a sequence of alphanumeric characters and underscores separated by dots.",
+    "invalid",
+)
 
 class PathValue(UserList):
     def __init__(self, value):
@@ -48,13 +53,6 @@ class PathValueProxy:
             return self
 
         instance.__dict__[self.field_name] = value
-
-
-path_label_validator = RegexValidator(
-    r"^(?P<root>[a-zA-Z][a-zA-Z0-9_]*)(?:.[a-zA-Z|a-zA-Z0-9_]+)*$",
-    "A label is a sequence of alphanumeric characters and underscores separated by dots.",
-    "invalid",
-)
 
 
 class PathFormField(forms.CharField):
