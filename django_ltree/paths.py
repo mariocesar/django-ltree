@@ -23,5 +23,3 @@ class PathGenerator(object):
             path = PathValue(self.path_prefix + [label])
             if path not in self.skip_paths:
                 return path
-
-    next = __next__
