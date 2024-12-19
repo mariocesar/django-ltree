@@ -10,7 +10,7 @@ from collections.abc import Iterable
 class PathValue(UserList):
     def __init__(self, value):
         if isinstance(value, str):
-            split_by = "/" if "/" in str else "."
+            split_by = "/" if "/" in value else "."
             value = value.strip().split(split_by) if value else []
         elif isinstance(value, int):
             value = [str(value)]
