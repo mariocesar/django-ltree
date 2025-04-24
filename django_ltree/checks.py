@@ -13,8 +13,16 @@ def check_database_backend_is_postgres(app_configs, **kwargs):
     ):
         errors.append(
             Warning(
-                "django_ltree needs postgres to support install the ltree extension.",
-                hint="Use the postgres engine or ignore if you already use a custom engine for postgres",
+                (
+                    "The 'django_ltree' package requires a PostgreSQL-compatible database engine "
+                    "to enable the 'ltree' extension."
+                ),
+                hint=(
+                    "Ensure your DATABASES setting uses 'django.db.backends.postgresql' or a "
+                    "compatible engine. If using a custom backend for PostgreSQL, you may safely "
+                    "ignore this warning."
+                ),
+                id="django_ltree.W001",
             )
         )
 
