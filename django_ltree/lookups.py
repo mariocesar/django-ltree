@@ -1,4 +1,4 @@
-from django.db.models import IntegerField, Lookup, Transform
+from django.db.models import Lookup
 
 from .fields import PathField
 
