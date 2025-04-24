@@ -1,20 +1,25 @@
-version: "3"
-
 services:
-  database:
-    image: postgres:10
+  postgres14:
+    image: postgres:14
     volumes:
       - "pgdata:/var/lib/postgresql/data"
-
-  backend:
-    build: .
-    hostname: django-ltree
-    volumes:
-      - ".:/app"
     ports:
-      - "8000:8000"
-    links:
-      - "database:database"
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taxonomy_db
+
+  postgres16:
+    image: postgres:16
+    volumes:
+      - "pgdata:/var/lib/postgresql/data"
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: taxonomy_db
 
 volumes:
   pgdata:

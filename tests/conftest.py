@@ -11,10 +11,10 @@ def pytest_sessionstart(session):
         DATABASES={
             "default": {
                 "ENGINE": "django.db.backends.postgresql",
-                "NAME": "ltree_test",
+                "NAME": "taxonomy_db",
                 "HOST": os.environ.get("DJANGO_DATABASE_HOST", "database"),
                 "USER": os.environ.get("DJANGO_DATABASE_USER", "postgres"),
-                "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD", ""),
+                "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD", "postgres"),
             }
         },
         ROOT_URLCONF="tests.urls",
