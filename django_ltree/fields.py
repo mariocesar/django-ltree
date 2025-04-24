@@ -1,10 +1,10 @@
 from collections import UserList
+from collections.abc import Iterable
+
 from django import forms
 from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
-
-from collections.abc import Iterable
 
 path_label_validator = RegexValidator(
     r"^(?P<root>[a-zA-Z0-9_-]+)(?:\.[a-zA-Z0-9_-]+)*$",

@@ -7,5 +7,5 @@ class DjangoLtreeConfig(AppConfig):
 
     def ready(self):
         from . import checks as checks
-        from . import lookups as lookups
         from . import functions as functions
+        from . import lookups as lookups
