@@ -1,3 +1,40 @@
 [build-system]
 requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "django_ltree"
+version = "0.6.0"
+description = "Django app to support ltree postgres extension"
+readme = { file = "README.md", content-type = "text/markdown" }
+license-files = ["LICENSE"]
+authors = [
+    { name = "Mario César Señoranis Ayala", email = "mariocesar@humanzilla.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "django>=2.2"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Framework :: Django",
+    "Framework :: Django :: 2.2",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13"
+]
+
+[project.urls]
+Source = "https://github.com/mariocesar/django_ltree"
+Tracker = "https://github.com/mariocesar/django_ltree/issues"
+
+[tool.setuptools.packages.find]
+include = ["django_ltree", "django_ltree.migrations"]
+
+[project.optional-dependencies]
+develop = ["twine", "tox"]
