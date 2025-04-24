@@ -1,11 +1,11 @@
 from django.db import migrations
 
+from django_ltree.operations import LtreeExtension
+
 
 class Migration(migrations.Migration):
     initial = True
 
     dependencies = []
 
-    operations = [
-        migrations.RunSQL("CREATE EXTENSION IF NOT EXISTS ltree;", "DROP EXTENSION ltree;")
-    ]
+    operations = [LtreeExtension()]

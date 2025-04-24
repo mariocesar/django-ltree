@@ -31,11 +31,13 @@ The main benefits of `ltree`:
 ## Installation
 
 1. Install the package:
+
    ```bash
    pip install django-ltree
    ```
 
 2. Add to your `INSTALLED_APPS`:
+
    ```python
    INSTALLED_APPS = [
        ...
@@ -45,9 +47,23 @@ The main benefits of `ltree`:
    ```
 
 3. Run migrations to install the ltree extension:
+
    ```bash
    python manage.py migrate django_ltree
    ```
+
+4. Alternatively you can avoid install the application, and create the the extensions with a custom migration in an app in your project.
+
+    ```python
+    from django.db import migrations
+    from django_ltree.operations import LtreeExtension
+
+    class Migration(migrations.Migration):
+        initial = True
+        dependencies = []
+
+        operations = [LtreeExtension()]
+    ```
 
 ## Quick Start
 
