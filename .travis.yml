@@ -2,9 +2,8 @@ sudo: false
 language: python
 cache: pip
 python:
-  - 3.6
-  - 3.7
-  - 3.8
+  - 3.11
+  - 3.12
 
 services:
   - postgresql
