@@ -40,9 +40,8 @@ class TreeModel(models.Model):
             .exclude(path=self.path)
         )
 
-    def add_child(self, slug, **kwargs):  # type:(str) -> Any
+    def add_child(self, path, **kwargs):  # type:(str) -> Any
         assert "path" not in kwargs
         kwargs["path"] = self.path[:]
-        kwargs["path"].append(slug)
-        kwargs["slug"] = slug
+        kwargs["path"].append(path)
         return type(self)._default_manager.create(**kwargs)
