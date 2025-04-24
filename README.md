@@ -1,55 +1,106 @@
 # django-ltree
 
-A tree extension implementation to support hierarchical tree-like data in Django models,
-using the native Postgres extension `ltree`.
+A Django implementation for PostgreSQL's ltree extension, providing efficient storage and querying of hierarchical tree-like data.
 
-Postgresql has already a optimized and very useful tree implementation for data.
-The extension is [ltree](https://www.postgresql.org/docs/9.6/static/ltree.html)
+See PostgreSQL's [ltree](https://www.postgresql.org/docs/current/ltree.html) documentation to learn
+more about it.
 
-This fork contains a backport to Django 1.11 and Python 3.6.
+The main benefits of `ltree`:
+
+- Efficient path queries (ancestors, descendants, pattern matching)
+- Index-friendly hierarchical storage
+- Powerful label path searching
+- Native PostgreSQL performance for tree operations
 
 [![Test](https://github.com/mariocesar/django-ltree/actions/workflows/test.yml/badge.svg)](https://github.com/mariocesar/django-ltree/actions/workflows/test.yml)
+[![PyPI Version](https://img.shields.io/pypi/v/django-ltree.svg)](https://pypi.org/project/django-ltree/)
 
+## Features
 
-## Links
+- Django model fields for ltree data types
+- Query utilities for common tree operations
+- Migration support for ltree extension installation
+- Compatibility with Django's ORM and query syntax
 
- - Pypi https://pypi.org/project/django-ltree/
- - Source code https://github.com/mariocesar/django-ltree
- - Bugs https://github.com/mariocesar/django-ltree/issues
- - Contribute https://github.com/mariocesar/django-ltree/pulls
- - Documentation `TODO`
+## Requirements
 
-## Install
+- Django 4.2+
+- Python 3.11+
+- PostgreSQL 14+ (with ltree extension enabled)
 
-```
-pip install django-ltree
-```
+## Installation
 
-Then add `django_ltree` to `INSTALLED_APPS` in your Django project settings.
+1. Install the package:
+   ```bash
+   pip install django-ltree
+   ```
 
-And make sure to run `django_ltree` migrations before you added the `PathField`
+2. Add to your `INSTALLED_APPS`:
+   ```python
+   INSTALLED_APPS = [
+       ...
+       "django_ltree",
+       ...
+   ]
+   ```
 
-```
-python manage.py migrate django_ltree
-```
+3. Run migrations to install the ltree extension:
+   ```bash
+   python manage.py migrate django_ltree
+   ```
 
-`django_ltree` migrations will install the `ltree` extension if not exist.
+## Quick Start
 
-You can alternatively specify the `django_ltree` dependency in the migrations of
-your applications that requires `PathField`, and run migrations smoothly.
+1. Add a PathField to your model:
+   ```python
+   from django_ltree.fields import PathField
 
-```
+   class Category(models.Model):
+       name = models.CharField(max_length=50)
+       path = PathField()
+   ```
+
+2. Create tree nodes:
+   ```python
+   root = Category.objects.create(name="Root", path="root")
+   child = Category.objects.create(name="Child", path=f"{root.path}.child")
+   ```
+
+3. Query ancestors and descendants:
+   ```python
+   # Get all ancestors
+   Category.objects.filter(path__ancestor=child.path)
+
+   # Get all descendants
+   Category.objects.filter(path__descendant=root.path)
+   ```
+
+## Migration Dependency
+
+Include django_ltree as a dependency in your app's migrations:
+
+```python
 class Migration(migrations.Migration):
     dependencies = [
-            ('django_ltree', '__latest__'),
+        ("django_ltree", "__latest__"),
     ]
 ```
 
-## Requires
+## Documentation
 
-- Django 1.11 or superior
-- Python 2
+For complete documentation, see [TODO: Add Documentation Link].
 
-## Testing
+## Links
 
-Make sure you have Postgres installed. Then simply run `tox` in the root directory of the project.
+- **Source Code**: https://github.com/mariocesar/django-ltree
+- **Bug Reports**: https://github.com/mariocesar/django-ltree/issues
+- **PyPI Package**: https://pypi.org/project/django-ltree/
+- **PostgreSQL ltree Docs**: https://www.postgresql.org/docs/current/ltree.html
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/mariocesar/django-ltree/blob/main/CONTRIBUTING.md) for guidelines.
+
+## License
+
+[MIT License](https://github.com/mariocesar/django-ltree/blob/main/LICENSE)
