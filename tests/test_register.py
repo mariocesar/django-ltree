@@ -1,5 +1,5 @@
+from django_ltree import functions, lookups
 from django_ltree.fields import PathField
-from django_ltree import lookups, functions
 
 
 def test_registered_lookups():

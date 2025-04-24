@@ -1,7 +1,5 @@
 import pytest
-
 from taxonomy.models import Taxonomy
-
 
 TEST_DATA = [
     {'name': 'Bacteria'},

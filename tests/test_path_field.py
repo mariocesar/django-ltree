@@ -1,9 +1,8 @@
 import pytest
-
 from django.core.exceptions import ValidationError
-from django_ltree.fields import PathValue
-
 from taxonomy.models import Taxonomy
+
+from django_ltree.fields import PathValue
 
 
 @pytest.mark.parametrize(["path", "valid"], [
