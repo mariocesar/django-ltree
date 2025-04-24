@@ -2,7 +2,6 @@ from django.db.models import Transform
 from django.db.models import fields
 from .fields import PathField
 
-from django_ltree.fields import PathField
 
 __all__ = ("NLevel",)
 
