@@ -2,7 +2,7 @@ import pytest
 from django.core.exceptions import ValidationError
 from taxonomy.models import Taxonomy
 
-from django_ltree.fields import PathValue
+from django_ltree.fields import PathValue, path_label_validator
 
 
 @pytest.mark.parametrize(
@@ -27,6 +27,6 @@ def test_path_field_validation(path, valid):
 
         assert excinfo.value.message_dict == {
             "path": [
-                "A label is a sequence of alphanumeric characters and underscores separated by dots."
+                path_label_validator.message
             ]
         }
