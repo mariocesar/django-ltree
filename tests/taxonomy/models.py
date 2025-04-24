@@ -9,4 +9,4 @@ class Taxonomy(TreeModel):
     name = models.TextField()
 
     def __str__(self):
-        return '{}: {}'.format(self.path, self.name)
+        return "{}: {}".format(self.path, self.name)

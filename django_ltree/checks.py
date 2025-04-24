@@ -8,7 +8,9 @@ def check_database_backend_is_postgres(app_configs, **kwargs):
     errors = []
     valid_dbs = ["postgres", "postgis"]
 
-    if "default" in settings.DATABASES and all(d not in settings.DATABASES["default"]["ENGINE"] for d in valid_dbs):
+    if "default" in settings.DATABASES and all(
+        d not in settings.DATABASES["default"]["ENGINE"] for d in valid_dbs
+    ):
         errors.append(
             Warning(
                 "django_ltree needs postgres to support install the ltree extension.",
@@ -17,4 +19,3 @@ def check_database_backend_is_postgres(app_configs, **kwargs):
         )
 
     return errors
-

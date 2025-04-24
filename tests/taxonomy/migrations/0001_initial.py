@@ -8,23 +8,26 @@ import django_ltree.fields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Taxonomy',
+            name="Taxonomy",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('path', django_ltree.fields.PathField(unique=True)),
-                ('name', models.TextField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("path", django_ltree.fields.PathField(unique=True)),
+                ("name", models.TextField()),
             ],
             options={
-                'ordering': ('path',),
-                'abstract': False,
+                "ordering": ("path",),
+                "abstract": False,
             },
         ),
     ]

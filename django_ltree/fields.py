@@ -12,6 +12,7 @@ path_label_validator = RegexValidator(
     "invalid",
 )
 
+
 class PathValue(UserList):
     def __init__(self, value):
         if isinstance(value, str):

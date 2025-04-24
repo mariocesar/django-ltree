@@ -14,7 +14,7 @@ def pytest_sessionstart(session):
                 "NAME": "ltree_test",
                 "HOST": os.environ.get("DJANGO_DATABASE_HOST", "database"),
                 "USER": os.environ.get("DJANGO_DATABASE_USER", "postgres"),
-                "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD", "")
+                "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD", ""),
             }
         },
         ROOT_URLCONF="tests.urls",
