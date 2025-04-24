@@ -8,7 +8,7 @@ jobs:
     name: Python ${{ matrix.python-version }} sample
     strategy:
       matrix:
-        python-version: [ 3.6, 3.7, 3.8, 3.9, 'pypy-3.6', 'pypy-3.7' ]
+        python-version: [3.10, 3.11, 3.12, "pypy-3.11"]
     continue-on-error: false
     services:
       database:
@@ -27,27 +27,29 @@ jobs:
       DJANGO_DATABASE_NAME: postgres
 
     steps:
-        - uses: actions/checkout@v2
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: ${{ matrix.python-version }}
-        - name: Depedencies
-          run: |
-            python -m pip install wheel
-            python -m pip install pytest pytest-django pytest-cov psycopg2-binary
-            python setup.py develop
+      - uses: actions/checkout@v4
 
-        - name: Run tests
-          run: >-
-            pytest -v -x
-            --cov=django_ltree
-            --junitxml=junit/test-results-${{ matrix.python-version }}.xml
-            tests/
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-        - name: Upload pytest test results
-          uses: actions/upload-artifact@v2
-          with:
-            name: pytest-results-${{ matrix.python-version }}
-            path: junit/test-results-${{ matrix.python-version }}.xml
-          if: ${{ always() }}
+      - name: Depedencies
+        run: |
+          python -m pip install wheel
+          python -m pip install pytest pytest-django pytest-cov psycopg2-binary
+          python setup.py develop
+
+      - name: Run tests
+        run: >-
+          pytest -v -x
+          --cov=django_ltree
+          --junitxml=junit/test-results-${{ matrix.python-version }}.xml
+          tests/
+
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results-${{ matrix.python-version }}
+          path: junit/test-results-${{ matrix.python-version }}.xml
+        if: ${{ always() }}
