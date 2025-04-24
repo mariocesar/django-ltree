@@ -2,8 +2,10 @@
 default:
 	pip install -e .[develop]
 
-publish: clean
-	python setup.py sdist bdist_wheel
+build: clean
+	python -m build -s -w
+
+publish: build
 	twine upload dist/*
 
 clean:
