@@ -33,11 +33,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
       - name: Dependencies
         run: |
-          python -m pip install pytest django pytest-django pytest-cov psycopg2-binary
-          pip install -e .
+          pip install -e . [develop]
 
       - name: Run tests
         run: >-
