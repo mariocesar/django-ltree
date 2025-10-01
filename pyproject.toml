@@ -37,4 +37,12 @@ Tracker = "https://github.com/mariocesar/django_ltree/issues"
 include = ["django_ltree", "django_ltree.migrations"]
 
 [project.optional-dependencies]
-develop = ["twine", "tox"]
+develop = [
+    "pytest",
+    "pytest-django",
+    "pytest-cov",
+    "psycopg[binary]",
+    "twine",
+    "tox",
+    "ruff"
+]

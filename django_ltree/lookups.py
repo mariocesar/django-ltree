@@ -1,46 +1,42 @@
-from django.db.models import Lookup
+from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.lookups import PostgresOperatorLookup
+from django.db.models import Value
 
-from .fields import PathField
-
-
-class SimpleLookup(Lookup):
-    lookup_operator = "="  # type: str
-
-    def as_sql(self, compiler, connection):
-        lhs, lhs_params = self.process_lhs(compiler, connection)
-        rhs, rhs_params = self.process_rhs(compiler, connection)
-        return "{} {} {}".format(lhs, self.lookup_operator, rhs), [*lhs_params, *rhs_params]
+from .fields import LqueryField, PathField
 
 
 @PathField.register_lookup
-class EqualLookup(Lookup):
+class EqualLookup(PostgresOperatorLookup):
+    postgres_operator = "="
     lookup_name = "exact"
 
-    def as_sql(self, compiler, connection):
-        lhs, lhs_params = self.process_lhs(compiler, connection)
-        rhs, rhs_params = self.process_rhs(compiler, connection)
-        return "{} = {}".format(lhs, rhs), [*lhs_params, *rhs_params]
-
-
 @PathField.register_lookup
-class AncestorLookup(SimpleLookup):
+class AncestorLookup(PostgresOperatorLookup):
     lookup_name = "ancestors"
-    lookup_operator = "@>"
+    postgres_operator = "@>"
 
 
 @PathField.register_lookup
-class DescendantLookup(SimpleLookup):
+class DescendantLookup(PostgresOperatorLookup):
     lookup_name = "descendants"
-    lookup_operator = "<@"
+    postgres_operator = "<@"
 
 
 @PathField.register_lookup
-class MatchLookup(SimpleLookup):
+class MatchLookup(PostgresOperatorLookup):
     lookup_name = "match"
-    lookup_operator = "~"
+    postgres_operator = "~"
 
 
 @PathField.register_lookup
-class ContainsLookup(SimpleLookup):
+class ContainsLookup(PostgresOperatorLookup):
     lookup_name = "contains"
-    lookup_operator = "?"
+    postgres_operator = "?"
+
+    def __init__(self, lhs, rhs):
+        if not isinstance(rhs, (tuple, list)):
+            raise TypeError("Contains lookup requires a list or tuple of values")
+
+        rhs = Value(rhs, output_field=ArrayField(base_field=LqueryField()))
+        super().__init__(lhs, rhs)
+

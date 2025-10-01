@@ -15,6 +15,7 @@ def pytest_sessionstart(session):
                 "HOST": os.environ.get("DJANGO_DATABASE_HOST", "database"),
                 "USER": os.environ.get("DJANGO_DATABASE_USER", "postgres"),
                 "PASSWORD": os.environ.get("DJANGO_DATABASE_PASSWORD", "postgres"),
+                "PORT": os.environ.get("DJANGO_DATABASE_PORT", 5432),
             }
         },
         ROOT_URLCONF="tests.urls",
