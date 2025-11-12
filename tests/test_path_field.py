@@ -38,10 +38,18 @@ def test_path_field_validation(path, valid):
         assert excinfo.value.message_dict == {"path": [path_label_validator.message]}
 
 
-def test_slash_in_path_field():
+@pytest.mark.parametrize(
+    "input_path",
+    [
+        "root/child/grandchild",
+        "root.child/grandchild",
+        PathValue("root/child/grandchild"),
+    ],
+)
+def test_slash_in_path_field(input_path):
     """Test that slashes in path field are converted to dots."""
     taxonomy = Taxonomy()
     taxonomy.name = "test"
-    taxonomy.path = PathValue("root/child/grandchild")
+    taxonomy.path = input_path
 
     assert str(taxonomy.path) == "root.child.grandchild"
