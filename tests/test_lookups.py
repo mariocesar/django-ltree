@@ -3,6 +3,7 @@ from taxonomy.models import Taxonomy
 
 pytestmark = pytest.mark.django_db
 
+
 def test_lookups_pattern_matching():
     """Test basic lquery pattern matching with existing Taxonomy model."""
     # Create some test data using the existing Taxonomy model
@@ -19,6 +20,7 @@ def test_lookups_pattern_matching():
     tenant_a_matches = Taxonomy.objects.filter(path__match="tenant_a.*")
     assert tenant_a_matches.count() == 2
 
+
 def test_lookups_contains():
     """Test the key feature: contains lookup with array of lquery patterns."""
     # Create test data
@@ -30,12 +32,10 @@ def test_lookups_contains():
     # Test array of patterns with contains lookup
     patterns = [
         "tenant_a.departments.*",  # HR department
-        "shared.public.*",         # Public docs
+        "shared.public.*",  # Public docs
     ]
 
-    matching = Taxonomy.objects.filter(
-        path__contains=patterns
-    )
+    matching = Taxonomy.objects.filter(path__contains=patterns)
 
     # Should match HR and public docs (2 items)
     assert matching.count() == 2
@@ -43,6 +43,7 @@ def test_lookups_contains():
     matched_names = set(item.name for item in matching)
     assert "HR" in matched_names
     assert "Docs" in matched_names
+
 
 def test_lookups_contains_with_single_value():
     """Test the contains lookup with a single value."""
@@ -57,6 +58,7 @@ def test_lookups_contains_with_single_value():
     assert "HR" in matched_names
     assert "Alpha Project" in matched_names
 
+
 def test_lookups_contains_invalid_value():
     """Test the contains lookup with an invalid value."""
     Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
@@ -66,6 +68,7 @@ def test_lookups_contains_invalid_value():
 
     with pytest.raises(TypeError):
         Taxonomy.objects.filter(path__contains="tenant_a.*")
+
 
 def test_lookups_ancestors():
     """Test the ancestors lookup."""
@@ -81,6 +84,7 @@ def test_lookups_ancestors():
     matched_names = set(item.name for item in matching)
     assert "Tenant A" in matched_names
     assert "Departments" in matched_names
+
 
 def test_lookups_descendants():
     """Test the descendants lookup."""
@@ -98,6 +102,7 @@ def test_lookups_descendants():
     assert "HR" in matched_names
     assert "Alpha Project" in matched_names
     assert "Departments" in matched_names
+
 
 def test_lookups_exact():
     """Test the exact lookup."""

@@ -12,6 +12,7 @@ path_label_validator = RegexValidator(
     "invalid",
 )
 
+
 class PathValue(UserList):
     def __init__(self, value):
         if isinstance(value, str):
@@ -65,7 +66,6 @@ class PathField(TextField):
     def db_type(self, connection):
         return "ltree"
 
-
     def formfield(self, **kwargs):
         kwargs["form_class"] = PathFormField
         kwargs["widget"] = TextInput(attrs={"class": "vTextField"})
@@ -105,7 +105,6 @@ class PathField(TextField):
 
 
 class LqueryField(TextField):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.editable = False

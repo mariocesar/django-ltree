@@ -25,8 +25,4 @@ def test_path_field_validation(path, valid):
         with pytest.raises(ValidationError) as excinfo:
             taxonomy.full_clean()
 
-        assert excinfo.value.message_dict == {
-            "path": [
-                path_label_validator.message
-            ]
-        }
+        assert excinfo.value.message_dict == {"path": [path_label_validator.message]}

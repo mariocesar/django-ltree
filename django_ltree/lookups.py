@@ -10,6 +10,7 @@ class EqualLookup(PostgresOperatorLookup):
     postgres_operator = "="
     lookup_name = "exact"
 
+
 @PathField.register_lookup
 class AncestorLookup(PostgresOperatorLookup):
     lookup_name = "ancestors"
@@ -39,4 +40,3 @@ class ContainsLookup(PostgresOperatorLookup):
 
         rhs = Value(rhs, output_field=ArrayField(base_field=LqueryField()))
         super().__init__(lhs, rhs)
-
