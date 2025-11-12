@@ -9,7 +9,6 @@ install: ## Install all development dependencies in editable mode
 	pip install -e .[develop]
 .PHONY: install
 
-
 test: ## Run tests
 	pytest tests/
 .PHONY: test
@@ -34,7 +33,7 @@ backend:
 	docker-compose run --rm --service-ports backend bash
 
 help:
-	@echo "$(BOLD)django-ltree Makefile"
-	@echo "Please use 'make $(BOLD)target$(RESET)' where $(BOLD)target$(RESET) is one of:"
+	@echo -e "$(BOLD)django-ltree Makefile$(RESET)"
+	@echo -e "Please use 'make $(BOLD)target$(RESET)' where $(BOLD)target$(RESET) is one of:"
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(GREEN)%-30s$(RESET) %s\n", $$1, $$2}'
 .PHONY: help
