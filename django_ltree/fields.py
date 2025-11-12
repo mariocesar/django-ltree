@@ -16,6 +16,9 @@ path_label_validator = RegexValidator(
 class PathValue(UserList):
     def __init__(self, value):
         if isinstance(value, str):
+            if "/" in value and "." in value:
+                raise ValueError("PathValue cannot mix slashes and dots in the same value")
+
             split_by = "/" if "/" in value else "."
             value = value.strip().split(split_by) if value else []
         elif isinstance(value, int):

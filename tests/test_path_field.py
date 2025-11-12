@@ -42,8 +42,9 @@ def test_path_field_validation(path, valid):
     "input_path",
     [
         "root/child/grandchild",
-        "root.child/grandchild",
+        "root.child.grandchild",
         PathValue("root/child/grandchild"),
+        PathValue("root.child.grandchild"),
     ],
 )
 def test_slash_in_path_field(input_path):
@@ -53,3 +54,11 @@ def test_slash_in_path_field(input_path):
     taxonomy.path = input_path
 
     assert str(taxonomy.path) == "root.child.grandchild"
+
+
+def test_mixing_slash_and_dot_in_path_field():
+    """Test that mixing slashes and dots raises ValueError."""
+    with pytest.raises(ValueError) as excinfo:
+        PathValue("root/child.grandchild")
+
+    assert str(excinfo.value) == "PathValue cannot mix slashes and dots in the same value"
