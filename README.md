@@ -102,6 +102,10 @@ class Migration(migrations.Migration):
     ]
 ```
 
+## Known Issues
+
+- Since PostgreSQL 16, the `-` character is also permitted. The tests in this repository expect version 16 or higher. If you're using PostgreSQL 15 or earlier, make sure to exclude `-` from labels.
+
 ## Documentation
 
 For complete documentation, see [TODO: Add Documentation Link].
