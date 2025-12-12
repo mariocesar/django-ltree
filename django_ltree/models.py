@@ -5,7 +5,7 @@ from .managers import TreeManager
 
 
 class TreeModel(models.Model):
-    path = PathField(unique=True)
+    path = PathField(unique=True, null=True, blank=True)
     objects = TreeManager()
 
     class Meta:
