@@ -225,3 +225,19 @@ def test_slicing(db):
     create_test_data()
     qs = Taxonomy.objects.all()
     assert qs[:3].count() == 3
+
+
+def test_change_parent(db):
+    create_test_data()
+    carnivora: Taxonomy = Taxonomy.objects.get(name="Carnivora")
+    pilosa: Taxonomy = Taxonomy.objects.get(name="Pilosa")
+    carnivora.change_parent(pilosa)
+
+    assert carnivora in pilosa.children()
+    assert set(pilosa.descendants()).issuperset(set(carnivora.descendants()))
+
+    carnivora.refresh_from_db()
+    child = carnivora.children().first()
+
+    assert carnivora.path[:-1] == pilosa.path
+    assert child.path[:-2] == pilosa.path

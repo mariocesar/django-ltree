@@ -1,6 +1,10 @@
 from django.db import models
+from django.db.models.functions import Concat
+
 
 from .fields import PathField, PathValue
+
+from .functions import NLevel, Subpath
 from .managers import TreeManager
 
 
@@ -45,3 +49,13 @@ class TreeModel(models.Model):
         kwargs["path"] = self.path[:]
         kwargs["path"].append(path)
         return type(self)._default_manager.create(**kwargs)
+
+    def change_parent(self, new_parent):
+        data = Concat(
+            models.Value(new_parent.path, output_field=PathField()),
+            Subpath(
+                models.F("path"),
+                NLevel(models.Value(str(self.path))) - 1,
+            ),
+        )
+        type(self).objects.filter(path__descendants=self.path).update(path=data)
