@@ -1,5 +1,5 @@
 import pytest
-from taxonomy.models import Taxonomy
+from tests.taxonomy.models import Taxonomy
 
 pytestmark = pytest.mark.django_db
 

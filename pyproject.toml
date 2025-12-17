@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools >= 77.0.3"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "django_ltree"
@@ -32,23 +32,33 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "Programming Language :: Python :: 3.14t"
 ]
 
 [project.urls]
 Source = "https://github.com/mariocesar/django_ltree"
 Tracker = "https://github.com/mariocesar/django_ltree/issues"
 
-[tool.setuptools.packages.find]
-include = ["django_ltree", "django_ltree.migrations"]
-
-[project.optional-dependencies]
-develop = [
+[dependency-groups]
+test = [
+    "django-coverage-plugin",
     "pytest",
     "pytest-django",
     "pytest-cov",
     "psycopg[binary]",
-    "twine",
-    "tox",
+]
+dev = [
     "ruff"
 ]
+
+[tool.django]
+settings_module = "tests.conf.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.conf.settings"
+django_find_project = false
+pythonpath = ["." ,"django_ltree"]
+
+[tool.coverage.run]
+plugins = ["django_coverage_plugin"]
+branch = true
+parallel = true
