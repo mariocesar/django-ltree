@@ -116,3 +116,17 @@ def test_lookups_exact():
     matching = Taxonomy.objects.filter(path__exact="tenant_a.departments.hr")
     assert matching.count() == 1
     assert "HR" == matching.first().name
+
+
+def test_lookups_depth():
+    Taxonomy.objects.create(path="tenant_a", name="Tenant A")
+    Taxonomy.objects.create(path="tenant_a.departments", name="Departments")
+    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
+    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+
+    assert len(Taxonomy.objects.filter(path__depth=1)) == 1
+    assert len(Taxonomy.objects.filter(path__depth=3)) == 4
+
+    assert Taxonomy.objects.filter(path__depth=1).get().name == "Tenant A"
