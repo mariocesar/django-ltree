@@ -58,3 +58,15 @@ class TreeModel(models.Model):
             ),
         )
         type(self).objects.filter(path__descendants=self.path).update(path=data)
+
+    def make_root(self):
+        """replant a branch
+        make this item a root element (no parents)
+        all the descendants are moved as well
+        """
+        data = Subpath(
+            models.F("path"),
+            NLevel(models.Value(str(self.path))) - 1,
+        )
+
+        type(self).objects.filter(path__descendants=self.path).update(path=data)

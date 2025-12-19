@@ -241,3 +241,17 @@ def test_change_parent(db):
 
     assert carnivora.path[:-1] == pilosa.path
     assert child.path[:-2] == pilosa.path
+
+
+def test_make_root(db):
+    create_test_data()
+    carnivora: Taxonomy = Taxonomy.objects.get(name="Carnivora")
+
+    assert carnivora.parent()
+    assert len(carnivora.descendants()) == 15
+
+    carnivora.make_root()
+    carnivora.refresh_from_db()
+
+    assert carnivora.parent() is None
+    assert len(carnivora.descendants()) == 15
