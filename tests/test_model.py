@@ -255,3 +255,59 @@ def test_make_root(db):
 
     assert carnivora.parent() is None
     assert len(carnivora.descendants()) == 15
+
+
+def test_delete_cascade(db):
+    create_test_data()
+    carnivora: Taxonomy = Taxonomy.objects.get(name="Carnivora")
+    canidae: Taxonomy = Taxonomy.objects.get(name="Canidae")
+
+    carnivora.delete_cascade()
+    canidae: Taxonomy = Taxonomy.objects.filter(name="Canidae").exists()
+
+    assert not canidae
+
+
+def test_delete_with_cascade_param(db):
+    create_test_data()
+    carnivora: Taxonomy = Taxonomy.objects.get(name="Carnivora")
+    canidae: Taxonomy = Taxonomy.objects.get(name="Canidae")
+
+    carnivora.delete(cascade=True)
+    canidae: Taxonomy = Taxonomy.objects.filter(name="Canidae").exists()
+
+    assert not canidae
+
+
+def test_delete_no_cascade_with_parent(db):
+    create_test_data()
+    carnivora: Taxonomy = Taxonomy.objects.get(name="Carnivora")
+    parent = carnivora.parent()
+    canidae: Taxonomy = Taxonomy.objects.get(name="Canidae")
+    assert carnivora in canidae.ancestors()
+
+    carnivora.delete()
+
+    canidae.refresh_from_db()
+    assert carnivora not in canidae.ancestors()
+    assert parent == canidae.parent()
+
+
+def test_delete_no_cascade_without_parent(db):
+    create_test_data()
+    animalia: Taxonomy = Taxonomy.objects.get(name="Animalia")
+    parent = animalia.parent()
+
+    assert parent is None
+
+    chrodata: Taxonomy = Taxonomy.objects.get(name="Chordata")
+    des = list(chrodata.descendants())
+
+    assert animalia in chrodata.ancestors()
+
+    animalia.delete()
+    chrodata.refresh_from_db()
+
+    assert animalia not in chrodata.ancestors()
+    assert chrodata.parent() is None
+    assert list(chrodata.descendants()) == des
