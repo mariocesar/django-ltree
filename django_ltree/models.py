@@ -37,12 +37,7 @@ class TreeModel(models.Model):
 
     def siblings(self):
         parent = self.path[:-1]
-        return (
-            type(self)
-            ._default_manager.filter(path__descendants=".".join(parent))
-            .filter(path__depth=len(self.path))
-            .exclude(path=self.path)
-        )
+        return type(self).objects.filter(path__match=f"{parent}.*{{1}}").exclude(path=self.path)
 
     def add_child(self, **kwargs):  # type:(str) -> Any
         return type(self)._default_manager.create_child(parent=self, **kwargs)
