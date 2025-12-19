@@ -5,23 +5,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Taxonomy',
+            name="Taxonomy",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('path', django_ltree.fields.PathField(blank=True, null=True, unique=True)),
-                ('name', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("path", django_ltree.fields.PathField(blank=True, null=True, unique=True)),
+                ("name", models.TextField()),
             ],
             options={
-                'ordering': ('path',),
-                'abstract': False,
+                "ordering": ("path",),
+                "abstract": False,
             },
         ),
     ]

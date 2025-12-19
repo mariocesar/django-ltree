@@ -1,4 +1,4 @@
-from django.db.models import Value, fields
+from django.db.models import fields
 from django.db.models.expressions import Func
 
 from .fields import PathField

@@ -44,7 +44,9 @@ test = [
     "psycopg[binary]",
 ]
 dev = [
-    "ruff"
+    "ruff",
+    "prek",
+    "django-cmd>=2.7",
 ]
 
 [tool.django]
@@ -59,3 +61,19 @@ pythonpath = ["." ,"django_ltree"]
 plugins = ["django_coverage_plugin"]
 branch = true
 parallel = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+        "E", # Errors
+        "F", # Pyflakes
+        "W", # Warnings about wrong format
+        "S", # Security
+        "T20", # Look for print() statements
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/{tests}/*" = ["S101", "F841"]
