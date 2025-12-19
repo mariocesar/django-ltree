@@ -161,6 +161,17 @@ def test_label(db):
         assert str(item.path).endswith(label)
 
 
+def test_add_child(db):
+    create_objects([{"name": "test data"}, {"name": "another data"}], parent=None)
+
+    test: Taxonomy = Taxonomy.objects.get(name="test data")
+    test.add_child(name="this data")
+
+    data: Taxonomy = Taxonomy.objects.get(name="this data")
+
+    assert data.parent() == test
+
+
 @pytest.mark.parametrize(
     "name, expected",
     [

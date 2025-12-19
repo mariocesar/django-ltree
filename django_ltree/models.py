@@ -44,10 +44,8 @@ class TreeModel(models.Model):
             .exclude(path=self.path)
         )
 
-    def add_child(self, path, **kwargs):  # type:(str) -> Any
-        kwargs["path"] = self.path[:]
-        kwargs["path"].append(path)
-        return type(self)._default_manager.create(**kwargs)
+    def add_child(self, **kwargs):  # type:(str) -> Any
+        return type(self)._default_manager.create_child(parent=self, **kwargs)
 
     def change_parent(self, new_parent):
         data = Concat(
