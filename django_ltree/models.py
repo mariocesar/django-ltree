@@ -33,7 +33,7 @@ class TreeModel(models.Model):
             return self.ancestors().exclude(id=self.id).last()
 
     def children(self):
-        return self.descendants().filter(path__depth=len(self.path) + 1)
+        return type(self).objects.filter(path__match=f"{self.path}.*{{1}}")
 
     def siblings(self):
         parent = self.path[:-1]
