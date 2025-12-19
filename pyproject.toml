@@ -48,6 +48,9 @@ dev = [
     "prek",
     "django-cmd>=2.7",
 ]
+ipython = [
+    "ipython>=8.37.0",
+]
 
 [tool.django]
 settings_module = "tests.conf.settings"
