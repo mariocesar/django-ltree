@@ -43,6 +43,9 @@ class TreeModel(models.Model):
         return type(self)._default_manager.create_child(parent=self, **kwargs)
 
     def change_parent(self, new_parent):
+        """
+        move an item and all it's descendants under another item
+        """
         data = Concat(
             models.Value(new_parent.path, output_field=PathField()),
             Subpath(
