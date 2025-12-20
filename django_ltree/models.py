@@ -84,7 +84,7 @@ class TreeModel(models.Model):
 
         # deleting all the descendants
         else:
-            self.delete_cascade(**kwargs)
+            return self.delete_cascade(**kwargs)
 
         return super().delete(**kwargs)
 
