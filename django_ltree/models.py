@@ -46,8 +46,9 @@ class TreeModel(models.Model):
         """
         move an item and all it's descendants under another item
         """
+        new_p = new_parent.path if isinstance(new_parent, type(self)) else new_parent
         data = Concat(
-            models.Value(new_parent.path, output_field=PathField()),
+            models.Value(new_p, output_field=PathField()),
             Subpath(
                 models.F("path"),
                 NLevel(models.Value(str(self.path))) - 1,
