@@ -1,10 +1,10 @@
 from collections import UserList
 from collections.abc import Iterable
 
-from django import forms
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
 
+from .forms import PathFormField
 from .validators import path_label_validator
 
 
@@ -52,10 +52,6 @@ class PathValueProxy:
             return self
 
         instance.__dict__[self.field_name] = value
-
-
-class PathFormField(forms.CharField):
-    default_validators = [path_label_validator]
 
 
 class PathField(TextField):
