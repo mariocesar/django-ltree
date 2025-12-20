@@ -54,7 +54,7 @@ class TreeModel(models.Model):
                 NLevel(models.Value(str(self.path))) - 1,
             ),
         )
-        type(self).t_objects.filter(path__descendants=self.path).update(path=data)
+        return type(self).t_objects.filter(path__descendants=self.path).update(path=data)
 
     def make_root(self):
         """replant a branch
@@ -66,7 +66,7 @@ class TreeModel(models.Model):
             NLevel(models.Value(str(self.path))) - 1,
         )
 
-        type(self).t_objects.filter(path__descendants=self.path).update(path=data)
+        return type(self).t_objects.filter(path__descendants=self.path).update(path=data)
 
     def delete(self, cascade=False, **kwargs):
         children: TreeModel = self.children()
