@@ -10,7 +10,7 @@ from .managers import TreeManager
 
 class TreeModel(models.Model):
     path = PathField(unique=True, null=True, blank=True)
-    objects = TreeManager()
+    t_objects = TreeManager()
 
     class Meta:
         abstract = True
@@ -23,24 +23,24 @@ class TreeModel(models.Model):
         return [PathValue(self.path[:n]) for n, p in enumerate(self.path) if n > 0]
 
     def ancestors(self):
-        return type(self)._default_manager.filter(path__ancestors=self.path)
+        return type(self).t_objects.filter(path__ancestors=self.path)
 
     def descendants(self):
-        return type(self)._default_manager.filter(path__descendants=self.path)
+        return type(self).t_objects.filter(path__descendants=self.path)
 
     def parent(self):
         if len(self.path) > 1:
             return self.ancestors().exclude(id=self.id).last()
 
     def children(self):
-        return type(self).objects.filter(path__match=f"{self.path}.*{{1}}")
+        return type(self).t_objects.filter(path__match=f"{self.path}.*{{1}}")
 
     def siblings(self):
         parent = self.path[:-1]
-        return type(self).objects.filter(path__match=f"{parent}.*{{1}}").exclude(path=self.path)
+        return type(self).t_objects.filter(path__match=f"{parent}.*{{1}}").exclude(path=self.path)
 
     def add_child(self, **kwargs):  # type:(str) -> Any
-        return type(self)._default_manager.create_child(parent=self, **kwargs)
+        return type(self).t_objects.create_child(parent=self, **kwargs)
 
     def change_parent(self, new_parent):
         """
@@ -53,7 +53,7 @@ class TreeModel(models.Model):
                 NLevel(models.Value(str(self.path))) - 1,
             ),
         )
-        type(self).objects.filter(path__descendants=self.path).update(path=data)
+        type(self).t_objects.filter(path__descendants=self.path).update(path=data)
 
     def make_root(self):
         """replant a branch
@@ -65,7 +65,7 @@ class TreeModel(models.Model):
             NLevel(models.Value(str(self.path))) - 1,
         )
 
-        type(self).objects.filter(path__descendants=self.path).update(path=data)
+        type(self).t_objects.filter(path__descendants=self.path).update(path=data)
 
     def delete(self, cascade=False, **kwargs):
         children: TreeModel = self.children()
@@ -89,4 +89,4 @@ class TreeModel(models.Model):
 
     def delete_cascade(self, **kwargs):
         """delete an item and all it's descendants"""
-        return type(self).objects.filter(path__descendants=self.path).delete()
+        return type(self).t_objects.filter(path__descendants=self.path).delete()

@@ -7,27 +7,27 @@ pytestmark = pytest.mark.django_db
 def test_lookups_pattern_matching():
     """Test basic lquery pattern matching with existing Taxonomy model."""
     # Create some test data using the existing Taxonomy model
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR Department")
-    Taxonomy.objects.create(path="tenant_a.departments.finance", name="Finance Department")
-    Taxonomy.objects.create(path="tenant_b.projects.alpha", name="Project Alpha")
-    Taxonomy.objects.create(path="shared.public.docs", name="Public Documentation")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR Department")
+    Taxonomy.t_objects.create(path="tenant_a.departments.finance", name="Finance Department")
+    Taxonomy.t_objects.create(path="tenant_b.projects.alpha", name="Project Alpha")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Public Documentation")
 
     # Test basic pattern matching
-    hr_matches = Taxonomy.objects.filter(path__match="tenant_a.departments.*")
+    hr_matches = Taxonomy.t_objects.filter(path__match="tenant_a.departments.*")
     assert hr_matches.count() == 2
 
     # Test wildcard pattern
-    tenant_a_matches = Taxonomy.objects.filter(path__match="tenant_a.*")
+    tenant_a_matches = Taxonomy.t_objects.filter(path__match="tenant_a.*")
     assert tenant_a_matches.count() == 2
 
 
 def test_lookups_contains():
     """Test the key feature: contains lookup with array of lquery patterns."""
     # Create test data
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
-    Taxonomy.objects.create(path="tenant_a.projects.alpha", name="Alpha Project")
-    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
-    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.t_objects.create(path="tenant_a.projects.alpha", name="Alpha Project")
+    Taxonomy.t_objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Docs")
 
     # Test array of patterns with contains lookup
     patterns = [
@@ -35,7 +35,7 @@ def test_lookups_contains():
         "shared.public.*",  # Public docs
     ]
 
-    matching = Taxonomy.objects.filter(path__contains=patterns)
+    matching = Taxonomy.t_objects.filter(path__contains=patterns)
 
     # Should match HR and public docs (2 items)
     assert matching.count() == 2
@@ -47,12 +47,12 @@ def test_lookups_contains():
 
 def test_lookups_contains_with_single_value():
     """Test the contains lookup with a single value."""
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
-    Taxonomy.objects.create(path="tenant_a.projects.alpha", name="Alpha Project")
-    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
-    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.t_objects.create(path="tenant_a.projects.alpha", name="Alpha Project")
+    Taxonomy.t_objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Docs")
 
-    matching = Taxonomy.objects.filter(path__contains=["tenant_a.*"])
+    matching = Taxonomy.t_objects.filter(path__contains=["tenant_a.*"])
     assert matching.count() == 2
     matched_names = set(item.name for item in matching)
     assert "HR" in matched_names
@@ -61,25 +61,25 @@ def test_lookups_contains_with_single_value():
 
 def test_lookups_contains_invalid_value():
     """Test the contains lookup with an invalid value."""
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
-    Taxonomy.objects.create(path="tenant_a.projects.alpha", name="Alpha Project")
-    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
-    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.t_objects.create(path="tenant_a.projects.alpha", name="Alpha Project")
+    Taxonomy.t_objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Docs")
 
     with pytest.raises(TypeError):
-        Taxonomy.objects.filter(path__contains="tenant_a.*")
+        Taxonomy.t_objects.filter(path__contains="tenant_a.*")
 
 
 def test_lookups_ancestors():
     """Test the ancestors lookup."""
-    Taxonomy.objects.create(path="tenant_a", name="Tenant A")
-    Taxonomy.objects.create(path="tenant_a.departments", name="Departments")
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
-    Taxonomy.objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
-    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
-    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+    Taxonomy.t_objects.create(path="tenant_a", name="Tenant A")
+    Taxonomy.t_objects.create(path="tenant_a.departments", name="Departments")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.t_objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
+    Taxonomy.t_objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Docs")
 
-    matching = Taxonomy.objects.filter(path__ancestors="tenant_a.departments")
+    matching = Taxonomy.t_objects.filter(path__ancestors="tenant_a.departments")
     assert matching.count() == 2
     matched_names = set(item.name for item in matching)
     assert "Tenant A" in matched_names
@@ -88,14 +88,14 @@ def test_lookups_ancestors():
 
 def test_lookups_descendants():
     """Test the descendants lookup."""
-    Taxonomy.objects.create(path="tenant_a", name="Tenant A")
-    Taxonomy.objects.create(path="tenant_a.departments", name="Departments")
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
-    Taxonomy.objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
-    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
-    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+    Taxonomy.t_objects.create(path="tenant_a", name="Tenant A")
+    Taxonomy.t_objects.create(path="tenant_a.departments", name="Departments")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.t_objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
+    Taxonomy.t_objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Docs")
 
-    matching = Taxonomy.objects.filter(path__descendants="tenant_a.departments")
+    matching = Taxonomy.t_objects.filter(path__descendants="tenant_a.departments")
 
     assert matching.count() == 3
     matched_names = set(item.name for item in matching)
@@ -106,27 +106,27 @@ def test_lookups_descendants():
 
 def test_lookups_exact():
     """Test the exact lookup."""
-    Taxonomy.objects.create(path="tenant_a", name="Tenant A")
-    Taxonomy.objects.create(path="tenant_a.departments", name="Departments")
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
-    Taxonomy.objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
-    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
-    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+    Taxonomy.t_objects.create(path="tenant_a", name="Tenant A")
+    Taxonomy.t_objects.create(path="tenant_a.departments", name="Departments")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.t_objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
+    Taxonomy.t_objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Docs")
 
-    matching = Taxonomy.objects.filter(path__exact="tenant_a.departments.hr")
+    matching = Taxonomy.t_objects.filter(path__exact="tenant_a.departments.hr")
     assert matching.count() == 1
     assert "HR" == matching.first().name
 
 
 def test_lookups_depth():
-    Taxonomy.objects.create(path="tenant_a", name="Tenant A")
-    Taxonomy.objects.create(path="tenant_a.departments", name="Departments")
-    Taxonomy.objects.create(path="tenant_a.departments.hr", name="HR")
-    Taxonomy.objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
-    Taxonomy.objects.create(path="tenant_b.departments.eng", name="Engineering")
-    Taxonomy.objects.create(path="shared.public.docs", name="Docs")
+    Taxonomy.t_objects.create(path="tenant_a", name="Tenant A")
+    Taxonomy.t_objects.create(path="tenant_a.departments", name="Departments")
+    Taxonomy.t_objects.create(path="tenant_a.departments.hr", name="HR")
+    Taxonomy.t_objects.create(path="tenant_a.departments.alpha", name="Alpha Project")
+    Taxonomy.t_objects.create(path="tenant_b.departments.eng", name="Engineering")
+    Taxonomy.t_objects.create(path="shared.public.docs", name="Docs")
 
-    assert len(Taxonomy.objects.filter(path__depth=1)) == 1
-    assert len(Taxonomy.objects.filter(path__depth=3)) == 4
+    assert len(Taxonomy.t_objects.filter(path__depth=1)) == 1
+    assert len(Taxonomy.t_objects.filter(path__depth=3)) == 4
 
-    assert Taxonomy.objects.filter(path__depth=1).get().name == "Tenant A"
+    assert Taxonomy.t_objects.filter(path__depth=1).get().name == "Tenant A"
