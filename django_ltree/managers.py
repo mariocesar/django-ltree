@@ -21,20 +21,43 @@ class TreeManager(models.Manager):
     def children(self, path):
         return self.filter().children(path)
 
-    def create_child(self, parent=None, **kwargs):
-        prefix = parent.path if parent else None
+    def create_child(self, parent: models.Model | PathValue | None = None, **kwargs):
+        """
+        create an item
+        `parent` can be an instance of the model or a PathValue object
+        if `parent` is None, item will be a root item
+        otherwise it'll be a child of that parent
+        """
         kwargs.pop("path", None)
-        obj = self.create(**kwargs)
+        if not parent:
+            return self.create(**kwargs)
 
-        if prefix:
-            path = PathValue([*prefix, obj.id])
-        else:
-            path = PathValue([obj.id])
+        prefix = parent.path if isinstance(parent, models.Model) else parent
+
+        obj = self._create(**kwargs)
+
+        path = PathValue([*prefix, obj.id])
         self.filter(id=obj.id).update(path=path)
 
         obj.path = path
 
         return obj
+
+    create_child.alters_data = True
+
+    def create(self, **kwargs):
+        """create an item with no parents (root)"""
+        kwargs.pop("path", None)
+        obj = self._create(**kwargs)
+
+        path = PathValue([obj.id])
+        self.filter(id=obj.id).update(path=path)
+
+        obj.path = path
+
+        return obj
+
+    create.alters_data = True
 
     def _create(self, **kwargs):
         """
