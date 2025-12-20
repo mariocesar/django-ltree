@@ -135,7 +135,7 @@ def test_create(db):
 def test_roots(db):
     create_test_data()
     roots = Taxonomy.t_objects.roots().values_list("name", flat=True)
-    assert set(roots) == set(["Bacteria", "Plantae", "Animalia"])
+    assert set(roots) == {"Bacteria", "Plantae", "Animalia"}
 
 
 @pytest.mark.parametrize(
