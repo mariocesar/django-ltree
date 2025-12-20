@@ -35,6 +35,10 @@ class TreeModel(models.Model):
         if len(self.path) > 1:
             return self.ancestors().exclude(id=self.id).last()  # pyright: ignore[reportReturnType, reportAttributeAccessIssue]
 
+    def get_root(self) -> Self:
+        func = Subpath(models.Value(str(self.path)), 0, 1)
+        return type(self).t_objects.get(path=func)
+
     def children(self) -> models.QuerySet[Self]:
         return type(self).t_objects.filter(path__match=f"{self.path}.*{{1}}")
 

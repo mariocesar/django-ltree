@@ -322,3 +322,18 @@ def test_delete_no_cascade_without_parent(db):
     assert animalia not in chrodata.ancestors()
     assert chrodata.parent() is None
     assert list(chrodata.descendants()) == des
+
+
+def test_get_root(db):
+    create_test_data()
+    mammalia: Taxonomy = Taxonomy.t_objects.get(name="Mammalia")
+
+    root = mammalia.get_root()
+
+    assert root.name == "Animalia"
+
+    bacteria: Taxonomy = Taxonomy.t_objects.get(name="Bacteria")
+
+    root = bacteria.get_root()
+
+    assert root.name == "Bacteria"
