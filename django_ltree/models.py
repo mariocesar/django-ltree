@@ -1,3 +1,5 @@
+from typing import Self
+
 from django.db import models
 from django.db.models.functions import Concat
 
@@ -9,40 +11,41 @@ from .managers import TreeManager
 
 
 class TreeModel(models.Model):
-    path = PathField(unique=True, null=True, blank=True)
-    t_objects = TreeManager()
+    path: PathValue = PathField(unique=True, null=True, blank=True)  # pyright: ignore[reportAssignmentType]
+
+    t_objects: TreeManager = TreeManager()
 
     class Meta:
         abstract = True
         ordering = ("path",)
 
-    def label(self):
+    def label(self) -> str:
         return self.path[-1]
 
-    def get_ancestors_paths(self):  # type: () -> List[List[str]]
-        return [PathValue(self.path[:n]) for n, p in enumerate(self.path) if n > 0]
+    def get_ancestors_paths(self) -> list[PathValue]:
+        return [PathValue(self.path[:n]) for n, _ in enumerate(self.path) if n > 0]
 
-    def ancestors(self):
+    def ancestors(self) -> models.QuerySet[Self]:
         return type(self).t_objects.filter(path__ancestors=self.path)
 
-    def descendants(self):
+    def descendants(self) -> models.QuerySet[Self]:
         return type(self).t_objects.filter(path__descendants=self.path)
 
-    def parent(self):
+    def parent(self) -> Self | None:
         if len(self.path) > 1:
-            return self.ancestors().exclude(id=self.id).last()
+            return self.ancestors().exclude(id=self.id).last()  # pyright: ignore[reportReturnType, reportAttributeAccessIssue]
 
-    def children(self):
+    def children(self) -> models.QuerySet[Self]:
         return type(self).t_objects.filter(path__match=f"{self.path}.*{{1}}")
 
-    def siblings(self):
+    def siblings(self) -> models.QuerySet[Self]:
         parent = self.path[:-1]
         return type(self).t_objects.filter(path__match=f"{parent}.*{{1}}").exclude(path=self.path)
 
-    def add_child(self, **kwargs):  # type:(str) -> Any
+    def add_child(self, **kwargs) -> Self:
         return type(self).t_objects.create_child(parent=self, **kwargs)
 
-    def change_parent(self, new_parent):
+    def change_parent(self, new_parent: Self | PathValue) -> int:
         """
         move an item and all it's descendants under another item
         """
@@ -56,7 +59,7 @@ class TreeModel(models.Model):
         )
         return type(self).t_objects.filter(path__descendants=self.path).update(path=data)
 
-    def make_root(self):
+    def make_root(self) -> int:
         """replant a branch
         make this item a root element (no parents)
         all the descendants are moved as well
@@ -68,8 +71,8 @@ class TreeModel(models.Model):
 
         return type(self).t_objects.filter(path__descendants=self.path).update(path=data)
 
-    def delete(self, cascade=False, **kwargs):
-        children: TreeModel = self.children()
+    def delete(self, cascade=False, **kwargs) -> tuple[int, dict[str, int]]:
+        children = self.children()
 
         # keeping the descendants
         if not cascade:
@@ -88,6 +91,6 @@ class TreeModel(models.Model):
 
         return super().delete(**kwargs)
 
-    def delete_cascade(self, **kwargs):
+    def delete_cascade(self, **kwargs) -> tuple[int, dict[str, int]]:
         """delete an item and all it's descendants"""
         return type(self).t_objects.filter(path__descendants=self.path).delete()
