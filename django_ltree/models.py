@@ -1,5 +1,6 @@
 from typing import Self
 
+from django.contrib.postgres.indexes import BTreeIndex, GistIndex
 from django.db import models
 from django.db.models.functions import Concat
 
@@ -18,6 +19,7 @@ class TreeModel(models.Model):
     class Meta:
         abstract = True
         ordering = ("path",)
+        indexes = [BTreeIndex(fields=["path"]), GistIndex(fields=["path"])]
 
     def label(self) -> str:
         return self.path[-1]
