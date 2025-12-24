@@ -24,7 +24,7 @@ The main benefits of `ltree`:
 
 ## Requirements
 
-- Django 4.2+
+- Django 5.2+ 
 - Python 3.11+
 - PostgreSQL 14+ (with ltree extension enabled)
 
@@ -52,55 +52,136 @@ The main benefits of `ltree`:
    python manage.py migrate django_ltree
    ```
 
-4. Alternatively you can avoid install the application, and create the the extensions with a custom migration in an app in your project.
+## Usage
+`django-ltree` provides a base model class called `TreeModel`.
 
-    ```python
-    from django.db import migrations
-    from django_ltree.operations import LtreeExtension
+`TreeModel` does these things out of the box:
 
-    class Migration(migrations.Migration):
-        initial = True
-        dependencies = []
+* adds a field called `path` to your model (path is created by items Id plus all parent Ids)
+* adds `t_objects` which is the `TreeManager` you can use to work with tree data
+* adds two indexes for `path` (one `BTreeIndex`, one `GistIndex`)
+* orders items base on `path`
 
-        operations = [LtreeExtension()]
-    ```
+if you are overriding the `Meta` class of your model, you may want to inherit from TreeModel.Meta.
+
+```py
+  class Meta(TreeModel.Meta):
+```
+
+to keep the indexes and ordering.
+
 
 ## Quick Start
 
-1. Add a PathField to your model:
+1. inherit from TreeModel:
    ```python
-   from django_ltree.fields import PathField
+   from django_ltree.models import TreeModel
 
-   class Category(models.Model):
+   class Category(TreeModel):
        name = models.CharField(max_length=50)
-       path = PathField()
    ```
+
 
 2. Create tree nodes:
    ```python
-   root = Category.objects.create(name="Root", path="root")
-   child = Category.objects.create(name="Child", path=f"{root.path}.child")
+   # make an item without a parent (root)
+   root = Category.t_objects.create(name="Root") 
+   # make a child item
+   child = Category.t_objects.create_child(name="Child", parent=root)
+   # you can also use `add_child` directly on root
+   child2 = root.add_child(name="another child")
    ```
+
+note that `path` is handled by `django-ltree`, you don't need to pass any value for it
 
 3. Query ancestors and descendants:
    ```python
    # Get all ancestors
-   Category.objects.filter(path__ancestor=child.path)
+   child.ancestors()
 
    # Get all descendants
-   Category.objects.filter(path__descendant=root.path)
+   child.descendants()
    ```
 
-## Migration Dependency
+### TreeModel methods
+`TreeModel` has the following methods:
 
-Include django_ltree as a dependency in your app's migrations:
+1. `label(self)`: returns the last part of `path`
 
-```python
-class Migration(migrations.Migration):
-    dependencies = [
-        ("django_ltree", "__latest__"),
-    ]
-```
+2. `ancestors(self)`: return all the ancestors of the current item
+
+3. `descendants(self)`: return all the descendants of the current item
+
+4. `parent(self)`: return the immediate parent of the current item
+
+5. `get_root(self)`: return the root parent of this item
+
+6. `children(self)`: return all the immediate children of the current item
+
+7. `siblings(self)`: return all the siblings of the current item (items that share the same parent with this item)
+
+8. `add_child(self, **kwargs)`: create a child for this item
+kwargs are the arguments used to make the child (the model fields)
+
+9. `change_parent(self, new_parent)`: change the parent of the current item (this moves the item and all it's descendants to be under another item)
+new_parent is either a object of the same model, or the `path` value of an object
+
+10. `make_root(self)`: move the current item to be a root item (moves the item and all it's descendants)
+
+11. `delete(self, cascade=False, **kwargs)`: deletes the current item
+if cascade is True, all the descendants are also deleted, otherwise they will move to become the descendants of the first parent of the deleted item
+
+12. `delete_cascade(self, **kwargs)`: delete the current item and all it's children
+
+
+### TreeManager methods
+`TreeManager` has the following methods
+1. `create_child(self, parent=None, **kwargs)`: creates an item
+if `parent` is provided, it will become the parent item of the created item, otherwise creation will happen as root
+`kwargs` are the model fields used to create the item
+
+2. `create(self, **kwargs)`: create a root item
+`kwargs` are the model fields used to create the item
+
+3. `roots(self)`: return all the root items from database
+
+4. `children(self, path)`: return all the children of the specified `path`
+
+
+### lookups and functions
+for a list of all available operations and functions for ltree check https://www.postgresql.org/docs/current/ltree.html#LTREE-OPS-FUNCS
+
+#### provided lookups:
+1. `exact` (same as `=` in postgresql)
+`TreeModel.t_objects.filter(path__exact=path)`
+
+2. `ancestors` (same as `@>` in postgresql) 
+`TreeModel.t_objects.filter(path__ancestors=path)`
+
+3. `descendants` (same as `<@` in postgresql)
+`TreeModel.t_objects.filter(path__descendants=path)`
+
+4. `match` (same as `~` in postgresql)
+`TreeModel.t_objects.filter(path__match=f"{self.path}.*{{1}}")`
+
+5. `contains` (same as `?` in postgresql)
+`TreeModel.t_objects.filter(path__contains="1.*")`
+
+6. `depth` (calls `NLEVEL` function from postgresql)
+`TreeModel.t_objects.filter(path__depth=len(path) + 1)`
+
+#### provided functions
+1. `django_ltree.functions.NLevel`
+same as NLEVEL function from postgresql
+
+2. `django_ltree.functions.Subpath`
+same as `SUBPATH` functions from postgresql
+
+
+for concatenation (`||`) you can use `django.db.models.functions.Concat`
+
+
+
 
 ## Known Issues
 
