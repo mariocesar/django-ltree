@@ -82,7 +82,7 @@ class TreeModel(models.Model):
 
         # keeping the descendants
         if not cascade:
-            parent: TreeModel | None = self.parent()
+            parent: PathValue = self.path[:-1]
             for c in children:
                 # if there is a parent, move the children under that parent
                 if parent:
