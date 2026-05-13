@@ -1,6 +1,7 @@
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.lookups import PostgresOperatorLookup
-from django.db.models import Value
+from django.db.models import Value, fields
+from django.db.models.lookups import Transform
 
 from .fields import LqueryField, PathField
 
@@ -22,6 +23,10 @@ class DescendantLookup(PostgresOperatorLookup):
     lookup_name = "descendants"
     postgres_operator = "<@"
 
+    @property
+    def output_field(self):
+        return fields.BooleanField()
+
 
 @PathField.register_lookup
 class MatchLookup(PostgresOperatorLookup):
@@ -40,3 +45,13 @@ class ContainsLookup(PostgresOperatorLookup):
 
         rhs = Value(rhs, output_field=ArrayField(base_field=LqueryField()))
         super().__init__(lhs, rhs)
+
+
+@PathField.register_lookup
+class NLevel(Transform):
+    lookup_name = "depth"
+    function = "nlevel"
+
+    @property
+    def output_field(self):
+        return fields.IntegerField()

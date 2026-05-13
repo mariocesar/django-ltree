@@ -1,16 +1,11 @@
 from collections import UserList
 from collections.abc import Iterable
 
-from django import forms
-from django.core.validators import RegexValidator
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
 
-path_label_validator = RegexValidator(
-    r"^(?P<root>[a-zA-Z0-9_-]+)(?:\.[a-zA-Z0-9_-]+)*$",
-    "A label is a sequence of alphanumeric characters and underscores separated by dots or slashes.",
-    "invalid",
-)
+from .forms import PathFormField
+from .validators import path_label_validator
 
 
 class PathValue(UserList):
@@ -57,10 +52,6 @@ class PathValueProxy:
             return self
 
         instance.__dict__[self.field_name] = value
-
-
-class PathFormField(forms.CharField):
-    default_validators = [path_label_validator]
 
 
 class PathField(TextField):
