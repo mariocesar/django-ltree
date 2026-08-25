@@ -26,7 +26,7 @@ The main benefits of `ltree`:
 
 - Django 5.2+
 - Python 3.11+
-- PostgreSQL 14+ (with ltree extension enabled)
+- PostgreSQL 16+ (with ltree extension enabled)
 
 ## Installation
 
@@ -87,7 +87,7 @@ to keep the indexes and ordering.
 
    ```python
    # make an item without a parent (root)
-   root = Category.t_objects.create(name="Root") 
+   root = Category.t_objects.create(name="Root")
    # make a child item
    child = Category.t_objects.create_child(name="Child", parent=root)
    # you can also use `add_child` directly on root
@@ -149,7 +149,7 @@ class MyTreeManager(TreeManager):
         if not parent:
             return self.create(**kwargs)
 
-        prefix = parent.path if isinstance(parent, models.Model) else parent  
+        prefix = parent.path if isinstance(parent, models.Model) else parent
         kwargs["path"] = PathValue([*prefix, kwargs[self.path_field]])
 
         obj = self._create(**kwargs)
@@ -242,12 +242,6 @@ same as `SUBPATH` functions from postgresql
 
 for concatenation (`||`) you can use `django.db.models.functions.Concat`
 
-
-
-
-## Known Issues
-
-- Since PostgreSQL 16, the `-` character is also permitted. The tests in this repository expect version 16 or higher. If you're using PostgreSQL 15 or earlier, make sure to exclude `-` from labels.
 
 ## Documentation
 
