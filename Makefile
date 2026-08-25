@@ -5,16 +5,16 @@ GREEN := \033[1;32m
 
 default: help
 
-install: ## Install all development dependencies in editable mode
-	pip install -e .[develop]
+install: ## Install the package and test dependencies
+	uv sync --group=test
 .PHONY: install
 
 test: ## Run tests
-	pytest tests/
+	uv run pytest tests/
 .PHONY: test
 
 lint: ## Run ruff check and fix
-	ruff check . --fix
+	uvx ruff check . --fix
 .PHONY: lint
 
 build: clean ## Build the package
