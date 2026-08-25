@@ -205,8 +205,34 @@ if `parent` is provided, it will become the parent item of the created item, oth
 
 3. `roots(self)`: return all the root items from database
 
-4. `children(self, path)`: return all the children of the specified `path`
+4. `children(self, node)`: return all the immediate children of `node`
+`node` can be a model instance, a `PathValue`, a string like `"1.2.3"`, or a list of labels
 
+5. `descendants_of(self, node, include_self=False, max_depth=None)`: return the descendants of `node`
+by default the node itself is not included, pass `include_self=True` to include it
+`max_depth` limits how many levels below the node to include this compiles to a
+single indexed `lquery` match, e.g. `path ~ '1.2.*{1,3}'`
+
+6. `ancestors_of(self, node, include_self=False)`: return the ancestors of `node`
+by default the node itself is not included, pass `include_self=True` to include it
+
+```python
+# the whole subtree under a category, excluding the category itself
+Category.t_objects.descendants_of(category)
+
+# only two levels deep, e.g. for building a menu
+Category.t_objects.descendants_of(category, max_depth=2)
+
+# breadcrumbs: all ancestors from the root down, including the item
+Category.t_objects.ancestors_of(category, include_self=True)
+```
+
+`roots`, `children`, `descendants_of`, and `ancestors_of` are also available on
+querysets, so they can be chained with regular filters:
+
+```python
+Category.t_objects.filter(is_active=True).descendants_of(category, max_depth=2)
+```
 
 ### lookups and functions
 
