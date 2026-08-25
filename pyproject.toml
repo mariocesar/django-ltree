@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django_ltree"
-version = "0.6.0"
+version = "0.7.0"
 description = "Django app to support ltree postgres extension"
 readme = { file = "README.md", content-type = "text/markdown" }
 license-files = ["LICENSE"]
