@@ -124,9 +124,9 @@ now paths are created using the `name` field
 
 ```py
   su = Role.t_objects.create(name="SuperUser")
-  print(su.path)  # PathField("SuperUser")
+  print(su.path)  # SuperUser
   admin = su.add_child(name="Admin")
-  print(admin.path)  # PathField("SuperUser.Admin")
+  print(admin.path)  # SuperUser.Admin
 ```
 
 when using an alternative field for path generation, it is recommended to use a
@@ -166,30 +166,36 @@ this does not work for auto-generated fields like `id`.
 
 1. `label(self)`: returns the last part of `path`
 
-2. `ancestors(self)`: return all the ancestors of the current item
+2. `ancestors(self)`: return all the ancestors of the current item, including the item itself
+(use `t_objects.ancestors_of(item)` if you don't want the item included)
 
-3. `descendants(self)`: return all the descendants of the current item
+3. `descendants(self)`: return all the descendants of the current item, including the item itself
+(use `t_objects.descendants_of(item)` if you don't want the item included)
 
-4. `parent(self)`: return the immediate parent of the current item
+4. `parent(self)`: return the immediate parent of the current item, or `None` if the item is a root
 
 5. `get_root(self)`: return the root parent of this item
 
 6. `children(self)`: return all the immediate children of the current item
 
-7. `siblings(self)`: return all the siblings of the current item (items that share the same parent with this item)
+7. `siblings(self)`: return all the siblings of the current item (items that share the same parent with this item), not including the item itself
 
 8. `add_child(self, **kwargs)`: create a child for this item
 kwargs are the arguments used to make the child (the model fields)
 
-9. `change_parent(self, new_parent)`: change the parent of the current item (this moves the item and all it's descendants to be under another item)
+9. `get_ancestors_paths(self)`: return the paths of all the ancestors of the current item (not including the item's own path) as a list of `PathValue`
+
+10. `change_parent(self, new_parent)`: change the parent of the current item (this moves the item and all it's descendants to be under another item)
 new_parent is either a object of the same model, or the `path` value of an object
+returns the number of rows updated
 
-10. `make_root(self)`: move the current item to be a root item (moves the item and all it's descendants)
+11. `make_root(self)`: move the current item to be a root item (moves the item and all it's descendants)
+returns the number of rows updated
 
-11. `delete(self, cascade=False, **kwargs)`: deletes the current item
-if cascade is True, all the descendants are also deleted, otherwise they will move to become the descendants of the first parent of the deleted item
+12. `delete(self, cascade=False, **kwargs)`: deletes the current item
+if cascade is True, all the descendants are also deleted, otherwise the children will move under the deleted item's parent (or become root items if the deleted item was a root)
 
-12. `delete_cascade(self, **kwargs)`: delete the current item and all it's children
+13. `delete_cascade(self, **kwargs)`: delete the current item and all it's descendants
 
 
 ### TreeManager methods
@@ -198,10 +204,11 @@ if cascade is True, all the descendants are also deleted, otherwise they will mo
 
 1. `create_child(self, parent=None, **kwargs)`: creates an item
 if `parent` is provided, it will become the parent item of the created item, otherwise creation will happen as root
-`kwargs` are the model fields used to create the item
+`parent` can be a model instance or a `PathValue`
+`kwargs` are the model fields used to create the item (any `path` passed in is ignored, it is always generated)
 
 2. `create(self, **kwargs)`: create a root item
-`kwargs` are the model fields used to create the item
+`kwargs` are the model fields used to create the item (any `path` passed in is ignored, it is always generated)
 
 3. `roots(self)`: return all the root items from database
 
@@ -253,10 +260,12 @@ for a list of all available operations and functions for ltree check <https://ww
 `TreeModel.t_objects.filter(path__match=f"{self.path}.*{{1}}")`
 
 5. `contains` (same as `?` in postgresql)
-`TreeModel.t_objects.filter(path__contains="1.*")`
+takes a list (or tuple) of lquery patterns and matches items whose path matches any of them; passing a single string raises a `TypeError`
+`TreeModel.t_objects.filter(path__contains=["1.*", "2.*"])`
 
 6. `depth` (calls `NLEVEL` function from postgresql)
 `TreeModel.t_objects.filter(path__depth=len(path) + 1)`
+it is a transform, so it can be combined with other lookups, e.g. `path__depth__lt=3`
 
 #### provided functions
 
