@@ -48,7 +48,7 @@ jobs:
 
       - name: install dependencies
         run: |
-          uv sync --group=test
+          uv sync
 
       - name: Install django matrix
         run: |
