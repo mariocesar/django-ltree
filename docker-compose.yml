@@ -17,7 +17,7 @@ services:
   tests:
     image: ghcr.io/astral-sh/uv:python${PYTHON_VERSION:-3.13}-trixie-slim
     working_dir: /app
-    command: uv run --group=test pytest tests/
+    command: uv run pytest tests/
     environment:
       DJANGO_DATABASE_HOST: postgres
       UV_PROJECT_ENVIRONMENT: /opt/venv

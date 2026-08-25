@@ -43,6 +43,9 @@ test = [
     "psycopg[binary]",
 ]
 
+[tool.uv]
+default-groups = ["test"]
+
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.conf.settings"
 django_find_project = false

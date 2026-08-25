@@ -1,4 +1,4 @@
-.PHONY: install test test-matrix lint build publish clean
+.PHONY: test test-matrix lint build publish clean
 
 BOLD := \033[1m
 RESET := \033[0m
@@ -6,9 +6,6 @@ GREEN := \033[1;32m
 
 POSTGRES_VERSION ?= 16
 PYTHON_VERSION ?= 3.13
-
-install:
-	uv sync --group=test
 
 test:
 	POSTGRES_VERSION=$(POSTGRES_VERSION) PYTHON_VERSION=$(PYTHON_VERSION) docker compose run --rm tests
