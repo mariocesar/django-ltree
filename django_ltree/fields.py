@@ -1,5 +1,6 @@
 from collections import UserList
 from collections.abc import Iterable
+from django.core.exceptions import ValidationError
 from django.db.models.query_utils import DeferredAttribute
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
@@ -78,7 +79,10 @@ class PathField(TextField):
         elif isinstance(value, PathValue):
             return value
 
-        return PathValue(value)
+        try:
+            return PathValue(value)
+        except ValueError as error:
+            raise ValidationError(str(error), code="invalid") from error
 
 
 class LqueryField(TextField):

@@ -81,6 +81,16 @@ def test_deferred_path_loads_on_access(db):
     assert deferred.path == PathValue(f"{animalia.id}")
 
 
+@pytest.mark.parametrize("value", ["root/child.grandchild", True])
+def test_to_python_invalid_value_raises_validation_error(value):
+    field = Taxonomy._meta.get_field("path")
+
+    with pytest.raises(ValidationError) as excinfo:
+        field.to_python(value)
+
+    assert excinfo.value.code == "invalid"
+
+
 @pytest.mark.parametrize(
     "value",
     [
