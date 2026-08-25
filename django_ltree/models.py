@@ -43,7 +43,7 @@ class TreeModel(models.Model):
         return type(self).t_objects.get(path=func)
 
     def children(self) -> models.QuerySet[Self]:
-        return type(self).t_objects.filter(path__match=f"{self.path}.*{{1}}")
+        return type(self).t_objects.children(self)
 
     def siblings(self) -> models.QuerySet[Self]:
         parent = self.path[:-1]

@@ -153,6 +153,70 @@ def test_children(db, name, expected):
     assert set(children) == set(expected)
 
 
+def test_children_accepts_instance_or_path(db):
+    create_test_data()
+    mammalia = Taxonomy.t_objects.get(name="Mammalia")
+
+    by_instance = set(Taxonomy.t_objects.children(mammalia).values_list("name", flat=True))
+    by_path = set(Taxonomy.t_objects.children(mammalia.path).values_list("name", flat=True))
+    by_string = set(Taxonomy.t_objects.children(str(mammalia.path)).values_list("name", flat=True))
+
+    assert by_instance == by_path == by_string == {"Carnivora", "Pilosa"}
+
+
+def test_descendants_of_excludes_self_by_default(db):
+    create_test_data()
+    carnivora = Taxonomy.t_objects.get(name="Carnivora")
+
+    descendants = Taxonomy.t_objects.descendants_of(carnivora)
+    assert carnivora not in descendants
+    assert descendants.count() == 14
+
+    with_self = Taxonomy.t_objects.descendants_of(carnivora, include_self=True)
+    assert carnivora in with_self
+    assert with_self.count() == 15
+
+
+@pytest.mark.parametrize(
+    "max_depth, expected",
+    [
+        (1, {"Canidae", "Feliformia"}),
+        (2, {"Canidae", "Canis", "Urocyon", "Feliformia", "Felidae"}),
+    ],
+)
+def test_descendants_of_max_depth(db, max_depth, expected):
+    create_test_data()
+    carnivora = Taxonomy.t_objects.get(name="Carnivora")
+    names = Taxonomy.t_objects.descendants_of(carnivora, max_depth=max_depth).values_list(
+        "name", flat=True
+    )
+    assert set(names) == expected
+
+
+def test_descendants_of_invalid_arguments(db):
+    create_test_data()
+    carnivora = Taxonomy.t_objects.get(name="Carnivora")
+
+    with pytest.raises(ValueError):
+        Taxonomy.t_objects.descendants_of(carnivora, max_depth=0)
+
+    with pytest.raises(ValueError):
+        Taxonomy.t_objects.descendants_of([])
+
+
+def test_ancestors_of(db):
+    create_test_data()
+    canis = Taxonomy.t_objects.get(name="Canis")
+
+    ancestors = Taxonomy.t_objects.ancestors_of(canis).values_list("name", flat=True)
+    assert list(ancestors) == ["Animalia", "Chordata", "Mammalia", "Carnivora", "Canidae"]
+
+    with_self = Taxonomy.t_objects.ancestors_of(canis, include_self=True).values_list(
+        "name", flat=True
+    )
+    assert list(with_self) == ["Animalia", "Chordata", "Mammalia", "Carnivora", "Canidae", "Canis"]
+
+
 def test_label(db):
     create_test_data()
     for item in Taxonomy.t_objects.all():

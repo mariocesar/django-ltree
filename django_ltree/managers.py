@@ -8,12 +8,40 @@ if TYPE_CHECKING:
     from django_ltree.models import TreeModel
 
 
+def resolve_path(node: "TreeModel | PathValue | str | list") -> PathValue:
+    """
+    Accept a model instance, PathValue, string, or list of labels and
+    return the node's path as a PathValue.
+    """
+    if isinstance(node, models.Model):
+        node = node.path  # ty:ignore[unresolved-attribute]
+    path = node if isinstance(node, PathValue) else PathValue(node)
+    if not path:
+        raise ValueError("An empty path has no position in the tree")
+    return path
+
+
 class TreeQuerySet(models.QuerySet):
     def roots(self):
         return self.filter(path__depth=1)
 
-    def children(self, path):
-        return self.filter(path__descendants=path, path__depth=len(path) + 1)
+    def children(self, node):
+        return self.descendants_of(node, max_depth=1)
+
+    def descendants_of(self, node, include_self=False, max_depth=None):
+        path = resolve_path(node)
+        min_depth = 0 if include_self else 1
+        if max_depth is not None and max_depth < min_depth:
+            raise ValueError("max_depth must be at least {}".format(min_depth))
+        quantifier = "{{{},{}}}".format(min_depth, max_depth if max_depth is not None else "")
+        return self.filter(path__match="{}.*{}".format(path, quantifier))
+
+    def ancestors_of(self, node, include_self=False):
+        path = resolve_path(node)
+        qs = self.filter(path__ancestors=path)
+        if not include_self:
+            qs = qs.filter(path__depth__lt=len(path))
+        return qs
 
 
 class TreeManager(models.Manager):
@@ -27,8 +55,14 @@ class TreeManager(models.Manager):
     def roots(self):
         return self.filter().roots()
 
-    def children(self, path):
-        return self.filter().children(path)
+    def children(self, node):
+        return self.filter().children(node)
+
+    def descendants_of(self, node, include_self=False, max_depth=None):
+        return self.filter().descendants_of(node, include_self=include_self, max_depth=max_depth)
+
+    def ancestors_of(self, node, include_self=False):
+        return self.filter().ancestors_of(node, include_self=include_self)
 
     def create_child(self, parent: "TreeModel | PathValue | None" = None, **kwargs):
         """
