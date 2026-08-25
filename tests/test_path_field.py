@@ -1,5 +1,6 @@
 import pytest
 from django.core.exceptions import ValidationError
+from django.db import connection
 
 from django_ltree.fields import PathValue, path_label_validator
 from tests.taxonomy.models import Taxonomy, TaxonomyName
@@ -78,6 +79,34 @@ def test_deferred_path_loads_on_access(db):
     deferred = Taxonomy.t_objects.only("id").get(pk=animalia.pk)
 
     assert deferred.path == PathValue(f"{animalia.id}")
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        ("root", "child"),
+        ["root", "child"],
+        "root.child",
+        PathValue("root.child"),
+    ],
+)
+def test_get_db_prep_value_accepts_any_pathvalue_input(value):
+    field = Taxonomy._meta.get_field("path")
+
+    assert field.get_db_prep_value(value, connection) == "root.child"
+
+
+def test_get_db_prep_value_accepts_int():
+    field = Taxonomy._meta.get_field("path")
+
+    assert field.get_db_prep_value(42, connection) == "42"
+
+
+def test_filter_by_tuple_path(db):
+    animalia = TaxonomyName.t_objects.create(name="Animalia")
+    chordata = animalia.add_child(name="Chordata")
+
+    assert TaxonomyName.t_objects.get(path=("Animalia", "Chordata")) == chordata
 
 
 def test_string_path(db):

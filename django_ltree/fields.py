@@ -77,16 +77,6 @@ class PathField(TextField):
 
         return PathValue(value)
 
-    def get_db_prep_value(self, value, connection, prepared=False):
-        if value is None:
-            return value
-        elif isinstance(value, PathValue):
-            return str(value)
-        elif isinstance(value, (list, str)):
-            return str(PathValue(value))
-
-        raise ValueError("Unknown value type {}".format(type(value)))
-
 
 class LqueryField(TextField):
     def __init__(self, *args, **kwargs):
