@@ -1,5 +1,5 @@
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.lookups import PostgresOperatorLookup
+from django.db.models.lookups import PostgresOperatorLookup
 from django.db.models import Value, fields
 from django.db.models.lookups import Transform
 
