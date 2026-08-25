@@ -1,39 +1,36 @@
+.PHONY: install test test-matrix lint build publish clean
 
 BOLD := \033[1m
 RESET := \033[0m
 GREEN := \033[1;32m
 
-default: help
+POSTGRES_VERSION ?= 16
+PYTHON_VERSION ?= 3.13
 
-install: ## Install the package and test dependencies
+install:
 	uv sync --group=test
-.PHONY: install
 
-test: ## Run tests
-	uv run pytest tests/
-.PHONY: test
+test:
+	POSTGRES_VERSION=$(POSTGRES_VERSION) PYTHON_VERSION=$(PYTHON_VERSION) docker compose run --rm tests
 
-lint: ## Run ruff check and fix
+test-matrix: ## Run tests across supported postgres versions
+	@for postgres_version in 16 17 latest; do \
+		printf "$(BOLD)⇨ postgres:%s$(RESET)\n" "$$postgres_version"; \
+		POSTGRES_VERSION=$$postgres_version docker compose run --rm tests || exit 1; \
+		docker compose down; \
+	done
+
+lint:
 	uvx ruff check . --fix
-.PHONY: lint
 
-build: clean ## Build the package
+build: clean
 	python -m build -s -w
 
 publish: build
 	twine upload dist/*
-.PHONY: publish
 
 clean:
 	rm -rf dist/
 	rm -rf build/
-.PHONY: clean
 
-backend:
-	docker-compose run --rm --service-ports backend bash
-
-help:
-	@echo -e "$(BOLD)django-ltree Makefile$(RESET)"
-	@echo -e "Please use 'make $(BOLD)target$(RESET)' where $(BOLD)target$(RESET) is one of:"
-	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(GREEN)%-30s$(RESET) %s\n", $$1, $$2}'
-.PHONY: help
+	docker compose down --volumes --remove-orphans

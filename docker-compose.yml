@@ -1,26 +1,35 @@
 services:
-  postgres14:
-    image: postgres:14
-    volumes:
-      - "pgdata:/var/lib/postgresql/data"
-    ports:
-      - 5432:5432
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-16}
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: taxonomy_db
+    tmpfs:
+      # Ephemeral data dir: fresh start on every run. Avoids issues when switching between postgres versions.
+      - /var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
 
-  postgres16:
-    image: postgres:16
-    volumes:
-      - "pgdata:/var/lib/postgresql/data"
-    ports:
-      - 5433:5432
+  tests:
+    image: ghcr.io/astral-sh/uv:python${PYTHON_VERSION:-3.13}-trixie-slim
+    working_dir: /app
+    command: uv run --group=test pytest tests/
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: taxonomy_db
+      DJANGO_DATABASE_HOST: postgres
+      UV_PROJECT_ENVIRONMENT: /opt/venv
+      UV_LINK_MODE: copy
+    volumes:
+      - .:/app
+      - uv-cache:/root/.cache/uv
+      - venv:/opt/venv
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
-  pgdata:
-  pyenv:
+  uv-cache:
+  venv:
