@@ -72,6 +72,14 @@ def test_id_path(db):
     assert chrodata.path == PathValue(f"{animalia.id}.{chrodata.id}")
 
 
+def test_deferred_path_loads_on_access(db):
+    animalia = Taxonomy.t_objects.create(name="Animalia")
+
+    deferred = Taxonomy.t_objects.only("id").get(pk=animalia.pk)
+
+    assert deferred.path == PathValue(f"{animalia.id}")
+
+
 def test_string_path(db):
     animalia: TaxonomyName = TaxonomyName.t_objects.create(name="Animalia")
     chrodata = animalia.add_child(name="Chordata")

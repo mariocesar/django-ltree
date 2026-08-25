@@ -1,6 +1,6 @@
 from collections import UserList
 from collections.abc import Iterable
-
+from django.db.models.query_utils import DeferredAttribute
 from django.db.models.fields import TextField
 from django.forms.widgets import TextInput
 
@@ -32,30 +32,24 @@ class PathValue(UserList):
         return ".".join(self)
 
 
-class PathValueProxy:
-    def __init__(self, field_name):
-        self.field_name = field_name
-
-    def __get__(self, instance, owner):
+class PathDescriptor(DeferredAttribute):
+    def __get__(self, instance, cls=None):
         if instance is None:
             return self
-
-        value = instance.__dict__[self.field_name]
-
-        if value is None:
+        value = super().__get__(instance, cls)
+        if value is None or isinstance(value, PathValue):
             return value
-
-        return PathValue(instance.__dict__[self.field_name])
+        value = PathValue(value)
+        instance.__dict__[self.field.attname] = value
+        return value
 
     def __set__(self, instance, value):
-        if instance is None:
-            return self
-
-        instance.__dict__[self.field_name] = value
+        instance.__dict__[self.field.attname] = value
 
 
 class PathField(TextField):
     default_validators = [path_label_validator]
+    descriptor_class = PathDescriptor
 
     def db_type(self, connection):
         return "ltree"
@@ -64,10 +58,6 @@ class PathField(TextField):
         kwargs["form_class"] = PathFormField
         kwargs["widget"] = TextInput(attrs={"class": "vTextField"})
         return super().formfield(**kwargs)
-
-    def contribute_to_class(self, cls, name, private_only=False):
-        super().contribute_to_class(cls, name)
-        setattr(cls, self.name, PathValueProxy(self.name))
 
     def from_db_value(self, value, expression, connection, *args):
         if value is None:
