@@ -22,7 +22,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django_ltree",
     "tests.taxonomy",
-    "django_harlequin",
 ]
 SITE_ID = 1
 SILENCED_SYSTEM_CHECKS = ["RemovedInDjango30Warning"]

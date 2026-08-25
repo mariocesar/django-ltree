@@ -42,15 +42,6 @@ test = [
     "pytest-cov",
     "psycopg[binary]",
 ]
-dev = [
-    "ruff",
-    "prek",
-    "django-cmd>=2.7",
-    "django-harlequin>=1.7.0",
-]
-ipython = [
-    "ipython>=8.37.0",
-]
 
 [tool.django]
 settings_module = "tests.conf.settings"
