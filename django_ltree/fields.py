@@ -10,12 +10,15 @@ from .validators import path_label_validator
 
 class PathValue(UserList):
     def __init__(self, value):
-        if isinstance(value, str):
+        if isinstance(value, bool):
+            raise ValueError("Invalid value: {!r} for path".format(value))
+        elif isinstance(value, str):
             if "/" in value and "." in value:
                 raise ValueError("PathValue cannot mix slashes and dots in the same value")
 
+            value = value.strip()
             split_by = "/" if "/" in value else "."
-            value = value.strip().split(split_by) if value else []
+            value = value.split(split_by) if value else []
         elif isinstance(value, int):
             value = [str(value)]
         elif isinstance(value, Iterable):

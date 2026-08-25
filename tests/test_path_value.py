@@ -1,3 +1,5 @@
+import pytest
+
 from django_ltree.fields import PathValue
 
 
@@ -14,3 +16,18 @@ def test_create():
         yield "beer"
 
     assert str(PathValue(generator())) == "100.bottles.of.beer"
+
+
+@pytest.mark.parametrize("value", ["", "  ", "\t\n"])
+def test_whitespace_only_strings_yield_empty_path(value):
+    assert list(PathValue(value)) == []
+
+
+def test_surrounding_whitespace_is_stripped():
+    assert str(PathValue("  a.b  ")) == "a.b"
+
+
+@pytest.mark.parametrize("value", [True, False])
+def test_bool_is_rejected(value):
+    with pytest.raises(ValueError):
+        PathValue(value)
