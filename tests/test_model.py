@@ -1,5 +1,5 @@
 import pytest
-from tests.conftest import create_objects
+from tests.conftest import create_tree
 from tests.taxonomy.models import Taxonomy
 
 
@@ -93,7 +93,7 @@ def test_label(taxonomy_tree):
 
 
 def test_add_child(db):
-    create_objects([{"name": "test data"}, {"name": "another data"}], parent=None)
+    create_tree("test data\nanother data")
 
     test: Taxonomy = Taxonomy.t_objects.get(name="test data")
     test.add_child(name="this data")
