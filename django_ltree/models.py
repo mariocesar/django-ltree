@@ -8,7 +8,7 @@ from django.db.models.functions import Concat
 from .fields import PathField, PathValue
 
 from .functions import NLevel, Subpath
-from .managers import TreeManager
+from .managers import TreeManager, resolve_path
 
 
 class TreeModel(models.Model):
@@ -52,13 +52,18 @@ class TreeModel(models.Model):
     def add_child(self, **kwargs) -> Self:
         return type(self).t_objects.create_child(parent=self, **kwargs)
 
-    def change_parent(self, new_parent: Self | PathValue) -> int:
+    def change_parent(self, new_parent: "Self | PathValue | str | list") -> int:
         """
         move an item and all it's descendants under another item
         """
-        new_p = new_parent.path if isinstance(new_parent, type(self)) else new_parent
+        new_path = resolve_path(new_parent)
+        if new_path[: len(self.path)] == self.path:
+            raise ValueError(
+                "Cannot move {!r} under {!r}: an item cannot be "
+                "a descendant of itself".format(str(self.path), str(new_path))
+            )
         data = Concat(
-            models.Value(new_p, output_field=PathField()),
+            models.Value(new_path, output_field=PathField()),
             Subpath(
                 models.F("path"),
                 NLevel(models.Value(str(self.path))) - 1,

@@ -179,6 +179,29 @@ def test_change_parent(taxonomy_tree):
     assert child.path[:-2] == pilosa.path
 
 
+def test_change_parent_rejects_itself_as_parent(taxonomy_tree):
+    carnivora: Taxonomy = taxonomy_tree("Carnivora")
+
+    with pytest.raises(ValueError, match="descendant of itself"):
+        carnivora.change_parent(carnivora)
+
+
+def test_change_parent_rejects_descendants(taxonomy_tree):
+    carnivora: Taxonomy = taxonomy_tree("Carnivora")
+    canis: Taxonomy = taxonomy_tree("Canis")
+
+    assert canis in carnivora.descendants()
+
+    for target in (canis, canis.path, str(canis.path)):
+        with pytest.raises(ValueError, match="descendant of itself"):
+            carnivora.change_parent(target)
+
+    carnivora.refresh_from_db()
+    canis.refresh_from_db()
+    assert canis in carnivora.descendants()
+    assert canis.path[: len(carnivora.path)] == carnivora.path
+
+
 def test_make_root(taxonomy_tree):
     carnivora: Taxonomy = taxonomy_tree("Carnivora")
 
