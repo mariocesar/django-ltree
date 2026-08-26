@@ -24,4 +24,6 @@ INSTALLED_APPS = [
     "tests.taxonomy",
 ]
 SITE_ID = 1
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SILENCED_SYSTEM_CHECKS = ["RemovedInDjango30Warning"]
