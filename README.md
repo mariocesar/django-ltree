@@ -160,6 +160,37 @@ for slightly better performance and less overhead.
 
 this does not work for auto-generated fields like `id`.
 
+## About sorting an using UUIDv7 primary keys
+
+with the default integer ids, labels have different lengths (`2`, `10`, `100`) and
+`ltree` compares them as text, so siblings do not sort in numeric order: an item
+with id `10` sorts before a sibling with id `2`.
+
+UUIDv7 primary keys avoid this entirely and are the recommended setup when you
+care about sibling ordering:
+
+- labels are fixed-width (3s), so the lexicographic order `ltree`
+  uses is consistent
+- UUIDv7 values start with a timestamp, so siblings sort in creation order,
+  and the default `ordering = ("path",)` gives you a correct depth-first
+  traversal for free
+
+```py
+try:
+    from uuid import uuid7  # Python 3.14+
+except ImportError:
+    from uuid6 import uuid7  # pip install uuid6
+
+class Category(TreeModel):
+    id = models.UUIDField(primary_key=True, default=uuid7, editable=False)
+    name = models.CharField(max_length=50)
+```
+
+```py
+root = Category.t_objects.create(name="Root")
+print(root.path)  # 0192b1f0-3b7a-7cc3-98c4-dc0c0c07398f
+```
+
 ### TreeModel methods
 
 `TreeModel` has the following methods:
