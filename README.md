@@ -162,14 +162,11 @@ this does not work for auto-generated fields like `id`.
 
 ## About sorting an using UUIDv7 primary keys
 
-with the default integer ids, labels have different lengths (`2`, `10`, `100`) and
-`ltree` compares them as text, so siblings do not sort in numeric order: an item
-with id `10` sorts before a sibling with id `2`.
+integer ids are zero-padded automatically so siblings sort in numeric order
+(see the sibling ordering section below). UUIDv7 primary keys are an
+alternative that needs no padding at all:
 
-UUIDv7 primary keys avoid this entirely and are the recommended setup when you
-care about sibling ordering:
-
-- labels are fixed-width (3s), so the lexicographic order `ltree`
+- labels are fixed-width (36 characters), so the lexicographic order `ltree`
   uses is consistent
 - UUIDv7 values start with a timestamp, so siblings sort in creation order,
   and the default `ordering = ("path",)` gives you a correct depth-first
@@ -190,6 +187,49 @@ class Category(TreeModel):
 root = Category.t_objects.create(name="Root")
 print(root.path)  # 0192b1f0-3b7a-7cc3-98c4-dc0c0c07398f
 ```
+
+## Sibling ordering and zero-padded labels
+
+`ltree` compares labels as text, so variable-width integer labels would sort
+incorrectly (`10` before `2`). to avoid this, integer labels are zero-padded
+automatically.
+
+```py
+root = Category.t_objects.create(name="Root")
+print(root.path)  # 0000000000000000001
+```
+
+manager and queryset methods (`children`, `descendants_of`, `ancestors_of`,
+`create_child`, `change_parent`) accept unpadded values and normalize them,
+so `Category.t_objects.descendants_of("1.10")` just works. raw ORM filters
+like `filter(path__match=...)` are not normalized, pad those labels yourself.
+
+### Upgrading from django-ltree 0.7 or earlier
+
+existing rows have unpadded labels, pad them once in a data migration:
+
+```py
+from django_ltree.utils import pad_path_labels
+
+def forwards(apps, schema_editor):
+    pad_path_labels(
+        apps.get_model("myapp", "Category"),
+        label_width=19,  # 10 if the model uses AutoField ids
+        using=schema_editor.connection.alias,
+    )
+```
+
+if you prefer to keep unpadded paths, opt out with
+`t_objects = TreeManager(label_width=None)`.
+
+### Escape hatches
+
+- `TreeManager(label_width=<int>)` forces a specific width. creating an item
+  whose label does not fit in the width raises `ValueError`
+- `TreeManager(label_width=None)` disables padding (the pre-0.8 behavior)
+- override `TreeManager.format_label(value)` for a custom label encoding
+  (for example base62): it receives the `path_field` value of the item and
+  returns the label string
 
 ### TreeModel methods
 

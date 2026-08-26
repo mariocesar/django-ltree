@@ -69,8 +69,9 @@ def test_id_path(db):
     animalia: Taxonomy = Taxonomy.t_objects.create(name="Animalia")
     chrodata = animalia.add_child(name="Chordata")
 
-    assert animalia.path == PathValue(f"{animalia.id}")
-    assert chrodata.path == PathValue(f"{animalia.id}.{chrodata.id}")
+    label = Taxonomy.t_objects.format_label
+    assert animalia.path == PathValue(label(animalia.id))
+    assert chrodata.path == PathValue(f"{label(animalia.id)}.{label(chrodata.id)}")
 
 
 def test_deferred_path_loads_on_access(db):
@@ -78,7 +79,7 @@ def test_deferred_path_loads_on_access(db):
 
     deferred = Taxonomy.t_objects.only("id").get(pk=animalia.pk)
 
-    assert deferred.path == PathValue(f"{animalia.id}")
+    assert deferred.path == PathValue(Taxonomy.t_objects.format_label(animalia.id))
 
 
 @pytest.mark.parametrize("value", ["root/child.grandchild", True])

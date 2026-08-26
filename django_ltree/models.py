@@ -56,7 +56,7 @@ class TreeModel(models.Model):
         """
         move an item and all it's descendants under another item
         """
-        new_path = resolve_path(new_parent)
+        new_path = resolve_path(new_parent, type(self).t_objects.resolve_label_width())
         if new_path[: len(self.path)] == self.path:
             raise ValueError(
                 "Cannot move {!r} under {!r}: an item cannot be "

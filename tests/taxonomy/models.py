@@ -21,3 +21,11 @@ class TaxonomyName(TreeModel):
     name = models.TextField()
 
     t_objects = TreeManager(path_field="name")
+
+
+class LegacyTaxonomy(TreeModel):
+    """Opts out of label padding to keep pre-0.8 unpadded paths."""
+
+    name = models.TextField()
+
+    t_objects = TreeManager(label_width=None)
