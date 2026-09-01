@@ -32,8 +32,8 @@ classifiers = [
 ]
 
 [project.urls]
-Source = "https://github.com/mariocesar/django_ltree"
-Tracker = "https://github.com/mariocesar/django_ltree/issues"
+Source = "https://github.com/mariocesar/django-ltree"
+Tracker = "https://github.com/mariocesar/django-ltree/issues"
 
 [dependency-groups]
 test = [
